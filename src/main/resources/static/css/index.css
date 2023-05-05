@@ -1,0 +1,122 @@
+@charset "utf-8";
+
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  box-sizing: border-box;
+  font-family: "Roboto";
+}
+
+
+#container {
+  margin: 0 auto;
+  width: 1200px;
+  background-color: #fff;
+  overflow:hidden;
+}
+video {
+  width: 100%;
+  height: 700px;
+  object-fit: cover;
+  /*filter:opacity(60%);*/
+}
+
+#maps-container{
+  width: 100%;
+  height: 400px;
+}
+
+#map{
+  
+  float: left;
+  width: 600px;
+  height: 400px;
+  background-color: grey;
+  
+}
+#map-contents{
+  float: left;
+  width: 600px;
+  height: 400px;
+}
+/* tourlist-spot */
+#tourist-spot-container{
+  width: 100%; /*1200px*/
+  height: 100px;
+ 
+}
+#tourist-spot-title{
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
+}
+#tourist-spot-title>span{
+  height: 100px;
+  font: bold;
+  font-size: 40px;
+  line-height: 100px;
+}
+
+.tourist-spot-title-right{
+  display: flex;
+  height: 100px;
+  line-height: 50px;
+  flex-direction: column;
+}
+.tourist-spot-title-right>a{
+  font-size: 30px;
+  
+}
+.tourist-spot-title-right>div{
+  font-size: 50px;
+  line-height: 50px;
+  padding-right: 20px;
+}
+/*===================================*/
+.image-container{
+	width: 1700%; /*1200px*17*/
+	height: 500px;
+	
+}
+.festival-container{
+	width: 1700%; /*1200px*17*/
+	height: 500px;
+}
+.inner{
+	width:400px;
+	height:400px;
+	float:left;
+	position:relative;
+}
+.inner img{
+	width: 100%;
+	height:400px;
+	padding: 20px 20px;
+	float:left;
+	
+}
+
+.inner a{
+	display:inline;
+	padding-left:20px;
+	/* position:absolute;
+	top:310px;
+	left:40px; */
+	font-size:24px;
+	color:#222;
+}
+/*heart*/
+.testHeart{
+	font-size:24px;
+}
+
+
+
+
+
+
+
+
+

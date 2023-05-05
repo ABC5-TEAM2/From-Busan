@@ -1,0 +1,135 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css");
+
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  box-sizing: border-box;
+  font-family: "Roboto";
+}
+a {
+  text-decoration: none;
+  color: black;
+}
+
+body {
+  width: 100%;
+  height: 100vh;
+  margin: 0 auto;
+}
+
+#header-container {
+  margin: 0 auto;
+  width: 1200px;
+  height: 100px;
+  background-color: #fff;
+}
+
+/* header */
+header {
+  width: 100%;
+  height: 100%;
+}
+
+/*로고*/
+.logo {
+  float: left;
+  display: flex; /*로고 이미지를 중앙에 위치 시키기 위해 flex로 지정하여 수평, 수직 정렬이 되도록 하기 위해.*/
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
+  width: 25%; /*지시사항에 적힌대로 width값 */
+  height: 100px; /*지시사항에 적힌대로 height값 */
+}
+
+/*로고이미지*/
+.logo > img.logoImage {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+}
+/* nav */
+nav {
+  width: 75%;
+  height: 100%;
+  float: right;
+}
+
+.top-nav {
+  height: 30%;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+}
+
+.top-nav > div {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.top-nav > div > a {
+  width: 100px;
+  height: 15px;
+  font-size: 14px;
+  display: block;
+  justify-content: center;
+  align-items: center;
+}
+
+/* main-nav */
+.main-nav {
+  height: 70%; /*70px*/
+  width: 100%; /*900px*/
+}
+.main-nav > ul {
+  float: left;
+  padding-left: 50px;
+}
+
+.main-nav > ul > li {
+  float: left;
+  text-align: center;
+  line-height: 70px;
+  height: 100%;
+}
+
+.main-nav > ul > li > a {
+  width: 150px;
+  display: block;
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: bold;
+  position: relative;
+}
+.fa-solid fa-globe {
+  font-size: 1px;
+}
+.subMenu {
+  width: 150px; /*메인메뉴 위치랑 동일하게*/
+  display: flex;
+  height: 0;
+  position: absolute;
+  top: 100px; /*header 높이 만큼 내려옴*/
+  z-index: 10;
+}
+
+.subMenu > ul.dropdown-menu {
+  width: 100%;
+  height: 160px; /*슬라이드높이*/
+}
+.subMenu > ul.dropdown-menu > li {
+  background-color: rgba(242, 242, 242, 0.9);
+  height: 80px;
+  width: 100%;
+}
+.subMenu > ul.dropdown-menu > li > a {
+  font-size: 18px;
+  color: #222;
+}
+.subMenu > ul.dropdown-menu > li > a:hover {
+  
+  border-bottom: 1px solid #222;
+}
+
+
+
+

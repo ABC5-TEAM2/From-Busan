@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <link rel="stylesheet" href="/css/default.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/header.css" />
+    <link rel="stylesheet" href="/css/joinForm.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="/js/index.js"></script>
+    
+    <script>
+    	function formCheck() {
+    		// 아이디 체크(4~20자리 사이)
+    		let member_id = $("#member_id");
+    		if (member_id.val().length < 4 || member_id.val().length > 20) {
+    			alert("아이디는 4 ~ 20자리 사이여야 합니다.");
+    			member_id.focus();
+    			return false;
+    		}
+    		
+        	// 패스워드 체크(4~20자리 사이)
+        	let password = $("#password");
+    		if (password.val().length < 4 || password.val().length > 20) {
+    			alert("패스워드는 5 ~ 10자리 사이여야 합니다.");
+    			password.focus();
+    			return false;
+    		}
+					//패스워드 중복체크
+					let passwordCheck=$("#passwordCheck");
+					if(password.val() != passwordCheck.val()){
+						alert("패스워드를 다시 확인해주세요");
+						password.focus();
+						return false;
+					}
+    		
+    		
+        	// 이름 체크(공백이 아님)
+        	let name = $("#name");
+        	if (name.val() == "") {
+        		alert("이름을 입력해 주세요");
+        		name.focus();
+        		return false;
+        	}
+        	
+        	// 생년월일 체크(오늘 이전 날짜만 가능)
+        	let birth = $("#birth");
+        	if (birth.val() == "") {
+        		alert("생년월일을 입력하세요");
+        		birth.focus();
+        		return false;
+        	}
+        	let now = new Date();
+        	let birthDate = new Date(birth.val());
+        	if (now < birthDate) {
+        		alert("생년월일은 오늘 이전이어야 합니다");
+        		birth.focus();
+        		return false;
+        	}
+    			
+        	
+        	
+        	return true;
+    	}
+    </script>
+</head>
+<body>
+<div th:replace ="fragments/header :: header">
+	</div>
+<div id="join-container">
+        <form action="/member/join" method="post" th:object="${joinForm}" onsubmit="return formCheck()">
+            <div class="logo-container">
+                <h2> Welcome to Busan</h2>
+                <img class="img" src="/image/bugi.png" alt="부기">
+            </div>
+            <table>
+                <tr>
+                    <td class="leftTd">ID</td>
+                    <td class="rightTd">
+                        <input type="text" th:field="*{member_id}">
+                        <input class="butID" type="button" value="중복확인">
+                        <span th:if="${#fields.hasGlobalErrors()}" class="error">
+										      <span class="error" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></span>
+										    </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="leftTd">Password</td>
+                    <td class="rightTd">
+                        <input type="password" th:field="*{password}">
+                        <p>비밀번호는 <span class="red">문자, 숫자로 5 ~ 10자리</span>로 입력하세요.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="leftTd">Password Check</td>
+                    <td class="rightTd"><input type="password" id="passwordCheck"></td>
+                </tr>
+               <tr>
+                <td class="leftTd">Name</td>
+                <td class="rightTd"><input type="text" th:field="*{name}"></td>
+               </tr>
+                <tr>
+                    <td class="leftTd">Birth</td>
+                    <td class="rightTd"><input type="date" th:field="*{birth}"></td>
+                </tr>
+                <tr>
+                    <td class="leftTd">Phone number</td>
+                    <td class="rightTd"><input type="tel" th:field="*{phone_number}"></td>
+                </tr>
+            </table>
+
+            <div class="join-button">
+                <input class="btn-join" type="submit" value="JOIN" >
+                <input class="btn-cancel" type="reset" value="CANCEL">
+            </div>
+            
+        </form>
+    </div>
+</body>
+</html>

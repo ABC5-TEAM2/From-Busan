@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <typeAlias type="com.frombusan.model.member.Member" alias="member"/>
+        
+        <typeAlias type="com.frombusan.model.AttachedImg" alias="file"/>
+        <typeAlias type="com.frombusan.model.board.Reply" alias="reply"/>
+        
+        <typeAlias type="com.frombusan.model.restaurant.Restaurant" alias="restaurant"/>
+        <typeAlias type="com.frombusan.model.review.Review" alias="review"/>
+        <typeAlias type="com.frombusan.model.tourist.Tourist_Spot" alias="tourist"/>
+        <typeAlias type="com.frombusan.model.festival.Festival" alias="festival"/>
+        
+        <typeAlias type="com.frombusan.model.course.Course" alias="course"/>
+        
+    </typeAliases>
+</configuration>

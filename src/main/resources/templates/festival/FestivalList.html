@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>축제 리스트</title>
+
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" href="/css/header.css" />
+<link rel="stylesheet" href="/css/list.css">
+<script src="/js/index.js"></script>
+</head>
+<body>
+	<div th:replace="fragments/header :: header"></div>
+
+	<div id="card-container">
+
+		<div class="container">
+
+			<div class="card" style="--clr: #009688;"
+				th:each="festival :${findAllFestival}">
+				<div class="imgBx">
+					<!--이미지-->
+					<img th:src="@{${festival.main_img_normal}}">
+				</div>
+				<div class="content">
+					<h2 th:text="${festival.main_title}"></h2>
+					<p th:text="${#strings.abbreviate(festival.itemcntnts,50)}"></p>
+					<a
+						th:href="@{/festival/FestivalInfo(festival_id=${festival.festival_id})}">상세
+						보기</a>
+						<a th:utext="'좋아요 수 : '+${festival.place_like}"></a>
+						<a th:utext="'조회수 : '+${festival.hit}"></a>
+				</div>
+
+
+			</div>
+			<div id="navigator" class="center">
+				<th:block th:if="${navi.currentPage - navi.pagePerGroup > 0}">
+					<a
+						th:href="@{/festival/list(page=${navi.currentPage - navi.pagePerGroup}, searchText=${searchText})}"><<</a>&nbsp;&nbsp;
+    				</th:block>
+				<th:block th:if="${navi.currentPage - 1 > 0}">
+					<a
+						th:href="@{/festival/list(page=${navi.currentPage - 1}, searchText=${searchText})}"><</a>&nbsp;&nbsp;
+    				</th:block>
+				<th:block th:if="${navi.endPageGroup ne 0}">
+					<th:block
+						th:each="counter : ${#numbers.sequence(navi.startPageGroup, navi.endPageGroup)}">
+						<a
+							th:href="@{/festival/list(page=${counter}, searchText=${searchText})}"
+							th:text="${counter}"></a>&nbsp;
+      				</th:block>
+				</th:block>
+				<th:block th:if="${navi.currentPage < navi.totalPageCount}">
+					<a
+						th:href="@{/festival/list(page=${navi.currentPage + 1}, searchText=${searchText})}">></a>&nbsp;&nbsp;
+    				</th:block>
+				<th:block
+					th:if="${navi.currentPage + navi.pagePerGroup < navi.totalPageCount}">
+					<a
+						th:href="@{/festival/list(page=${navi.currentPage + navi.pagePerGroup}, searchText=${searchText})}">>></a>
+				</th:block>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

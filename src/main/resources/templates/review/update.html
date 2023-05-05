@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 수정</title>
+    <link rel="stylesheet" href="/css/default.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="/js/index.js"></script>
+    <script th:inline="javascript">
+    
+      
+      function deleteImg(img_id,index) {
+
+   	    let review_id = [[${review.review_id}]];
+	   	let file = event.currentTarget.parentElement;
+	  //let fileName = file.parentElement.querySelector("a").innerText;
+   	 	document.getElementById("fileRemoved").value = "true";
+   	 	
+	   	 let attachedImg = document.getElementById("attachedImg-" + index);
+	     attachedImg.style.display = "none";
+  	 	
+   	    $.ajax({
+   	        url: `/review/deleteFile/${review_id}?img_id=${img_id}`,
+   	        method: 'DELETE',
+   	        success: function() {
+   	            console.log('File deleted successfully.');
+   	        },
+   	        error: function(xhr, status, error) {
+   	            console.log('Error occurred while deleting file:', error);
+   	        	}
+   	    	});
+    	}
+      
+      $(function() {
+          // 페이지가 완전히 로드된 후에 함수 호출
+          let a = [[${files}]];
+          console.log(a);
+        });
+      
+    </script>
+</head>
+<body>
+<div th:replace ="fragments/header :: header">
+  	</div>
+<div id="container">
+  <h1>[ 게시판 - 글수정 ]</h1>
+  <form th:action="@{/review/update(review_id=${review.review_id})}" th:object="${review}" method="post" enctype="multipart/form-data">
+    <table>
+      <tr>
+        <th>제목</th>
+        <td>
+            <input type="text" th:field="*{title}">
+            <div class="error" th:errors="*{title}"></div>
+        </td>
+      </tr>
+      <tr>
+        <th>내용</th>
+        <td>
+          <textarea rows="10" cols="30" th:field="*{contents}" ></textarea>
+          <div class="error" th:errors="*{contents}"></div>
+        </td>
+      </tr>
+      <tr>
+        <th>조회수</th>
+        <td><span th:text="*{hit}"></span></td>
+      </tr>
+      <tr>
+        <th>작성일</th>
+        <td><span th:text="*{#temporals.format(created_time, 'yyyy-MM-dd HH:mm')}"></span></td>
+      </tr>
+      <tr>
+        <th>작성자</th>
+        <td th:text="*{member_id}"></td>
+      </tr>
+      
+      <tr th:each="file, fileStat: ${files}" >
+		  <th>첨부파일<a th:text="${fileStat.count}"></a></th>
+		  <td>
+		    <div th:id="'attachedImg-' + ${fileStat.index}" th:if="${file}">
+			<img th:src="@{/resources01/img/__${file.SAVED_FILENAME}__}" th:if="${file}" th:href="@{/review/download/{id}(review_id=${file.REVIEW_ID})}"  th:width="100" th:height="100" />
+		      <input type="button" th:onclick="|deleteImg('${file.IMG_ID}', ${fileStat.index})|" value="삭제">
+		    </div>
+		    <input type="file" name="file">
+		  </td>
+		</tr>
+        
+        
+        
+      </tr>
+    </table>
+    <input type="hidden" th:field="*{hit}">
+    <input type="hidden" th:field="*{created_time}">
+    <input type="hidden" th:field="*{member_id}">
+    <input type="hidden" th:field="*{fileRemoved}"> 
+    <p>
+    <div class="center">
+      <input type="button" onclick="location.href='/review/list'" value="목록으로">
+      <input type="submit" value="수정하기">
+      <input type="reset" value="취소">
+    </div>
+  </form>
+</div>
+</body>
+</html>

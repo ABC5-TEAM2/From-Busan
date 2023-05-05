@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>게시판 리스트</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" href="/css/header.css" />
+<link rel="stylesheet" href="/css/list.css">
+<script src="/js/index.js"></script>
+<script th:inline="javascript">
+</script>
+</head>
+<body>
+	<div th:replace="fragments/header :: header"></div>
+	<div id="card-container">
+		<div class="container">
+			<div class="card" style="--clr: #009688;"
+				th:each="tourist :${tourist}">
+				<div class="imgBx">
+					<!--이미지-->
+					<img th:src="@{${tourist.main_img_normal}}">
+				</div>
+				<div class="content">
+					<h2 th:text="${tourist.main_title}"></h2>
+					<p th:text="${#strings.abbreviate(tourist.itemcntnts,50)}"></p>
+					<a th:href="@{/tourist/TouristInfo(tourist_Spot_id=${tourist.tourist_Spot_id})}">상세 보기</a>
+					<a  th:utext="'좋아요 수 : '+${tourist.place_like}"></a>
+					<a  th:utext="'조회수 : '+${tourist.hit}"></a>
+				</div>
+			</div>
+			
+			<div id="navigator" class="center">
+					<!-- 이전 그룹이 없을 경우 보여주지 않음 -->
+					<th:block th:if="${navi.currentPage - navi.pagePerGroup > 0}">
+					<a th:href="@{/tourist/list(page=${navi.currentPage - navi.pagePerGroup}, searchText=${searchText})}"><<</a>&nbsp;&nbsp;
+    				</th:block>
+					<!-- 이전 페이지가 없을 경우 보여주지 않음 -->
+					<th:block th:if="${navi.currentPage - 1 > 0}">
+					<a th:href="@{/tourist/list(page=${navi.currentPage - 1}, searchText=${searchText})}"><</a>&nbsp;&nbsp;
+    				</th:block>
+					<th:block th:if="${navi.endPageGroup ne 0}">
+					<th:block th:each="counter : ${#numbers.sequence(navi.startPageGroup, navi.endPageGroup)}">
+					<a th:href="@{/tourist/list(page=${counter}, searchText=${searchText})}" th:text="${counter}"></a>&nbsp;
+      				</th:block>
+					</th:block>
+					<!-- 다음 페이지가 없을 경우 보여주지 않음 -->
+					<th:block th:if="${navi.currentPage < navi.totalPageCount}">
+						<a th:href="@{/tourist/list(page=${navi.currentPage + 1}, searchText=${searchText})}">></a>&nbsp;&nbsp;
+    				</th:block>
+					<!-- 다음 그룹이 없을 경우 보여주지 않음 -->
+    				<th:block th:if="${navi.currentPage + navi.pagePerGroup < navi.totalPageCount}">
+    				<a th:href="@{/tourist/list(page=${navi.currentPage + navi.pagePerGroup}, searchText=${searchText})}">>></a>
+    				</th:block>
+				</div>
+		</div>
+	</div>
+
+</body>
+</html>

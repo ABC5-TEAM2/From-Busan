@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frombusan.repository.RestaurantMapper">
+    
+    <select id="findRestaurantLat" resultType="double">
+        select lat from restaurant where restaurant_id=70
+        
+        
+    </select>
+    
+    
+      <select id="findRestaurantLng" resultType="double">
+        select lng from restaurant where restaurant_id=70
+        
+        
+    </select>
+    
+     <select id="findRestaurant" resultType="restaurant">
+        select * from restaurant where restaurant_id=#{restaurant_id}
+    </select>
+    <!-- 맛집리스트 -->
+    <select id="findAllRestaurant" resultType="restaurant">
+        select * from restaurant 
+    </select>
+</mapper>

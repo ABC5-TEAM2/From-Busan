@@ -1,0 +1,617 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>게시판 리스트</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<link rel="stylesheet" href="/css/header.css" />
+<link rel="stylesheet" href="/css/Info.css" />
+<script src="/js/index.js"></script>
+<style type="text/css">
+.asd {
+	width: 400px;
+	height: 300px;
+}
+</style>
+<script th:inline="javascript">
+
+
+///////////////////////////////////////기본 장소 지도 //////////////////////////////////////
+function getDb(){
+	
+	   //지도 표시	
+	 	const  map= new google.maps.Map(document.getElementById("map"),{
+	           zoom:14,
+	           center : new google.maps.LatLng(35.11, 129.04),
+	           mapTypeId: google.maps.MapTypeId.ROADMAP,
+	       });
+	       
+		    const infowindow = new google.maps.InfoWindow();
+		    let i,res;
+		    let marker;
+		    
+	    	//초기 화면 	
+			    let lat = [[${tourist_Spot.lat}]];
+			    let lng = [[${tourist_Spot.lng}]];
+		    	const main_title = [[${tourist_Spot.main_title}]];
+		    	const itemcntnts= [[${#strings.abbreviate(tourist_Spot.itemcntnts,100)}]];
+		 	    const img_date = [[${tourist_Spot.main_img_normal}]]
+	 	    	 //로케이션 별로 마크 생성
+	          	marker = new google.maps.Marker({
+	              position: new google.maps.LatLng(lat,lng),
+	              map:map,
+	              animation: google.maps.Animation.DROP,
+	            	//icon: 'your-icon.png'
+	          	});
+	   	    	 
+	            const positions= new google.maps.LatLng(lat,lng);
+	            
+	            // 마크를 글릭햇을 때 보여주는 경로
+	            google.maps.event.addListener(
+	                marker,
+	                "click",
+	                (function(marker){
+	                    return function (){
+	                        infowindow.setContent("<img src="+img_date+" class='asd'>"+"<h1>"+main_title+"</h1>"+"<p>"+itemcntnts
+	                        +"<button type='button' class='btn btn-outline-primary' onclick='calcRouteByRail(" +lat+","+lng + ")'>Rail로 도착</button> "
+	                        +"<button type='button' class='btn btn-outline-primary' onclick='calcRouteByBus(" +lat+","+lng + ")'>Bus로 도착</button> "+"<p>"
+	                        );
+	                        infowindow.open(map,marker);
+	                        if (marker.getAnimation() !== null) {
+		                        marker.setAnimation(null);
+		                      } else {
+		                        marker.setAnimation(google.maps.Animation.BOUNCE);
+		                      }
+	                    };
+	                    })(marker,i)
+	            	);
+	         // 내 위치 파악하기
+	         if (navigator.geolocation) {
+	           navigator.geolocation.getCurrentPosition(
+	             (position) => {
+	           	  const myLat = position.coords.latitude;
+	               const myLng = position.coords.longitude;	 
+	             
+	               const pos = new google.maps.LatLng(myLat,myLng);
+	              	
+	               marker = new google.maps.Marker({
+			                position: pos,
+			                map:map,
+			            });
+	               marker.setAnimation(google.maps.Animation.BOUNCE);
+	               infowindow.setPosition(pos);
+	               infowindow.setContent("내위치"+"<p>"+pos);
+	               infowindow.open(map);
+	               map.setCenter(pos);
+	             },
+	             () => {
+	               handleLocationError(true, infowindow, map.getCenter());
+	             }
+	           );
+		            } else {
+		              // Browser doesn't support Geolocation
+		              handleLocationError(false, infowindow, map.getCenter());
+		            }
+		} 
+
+/////////////// 내 위치 파악 실패 시 실행 /////////////////////////////////////////////////////////////////////////
+
+function handleLocationError(browserHasGeolocation, infowindow, pos) {
+ infowindow.setPosition(pos);
+ infowindow.setContent(
+   browserHasGeolocation
+     ? "Error: The Geolocation service failed."
+     : "Error: Your browser doesn't support geolocation."
+ );
+ infowindow.open(map);
+}
+
+
+
+/////////////// 전철로 길찾기/////////////////////////////////////////////////////////////////////////
+function calcRouteByRail(lat,lng) {
+
+	navigator.geolocation.getCurrentPosition(
+   (position) => {
+ 	   const myLat = position.coords.latitude;
+     const myLng = position.coords.longitude;	 
+     const mypos = new google.maps.LatLng(myLat,myLng);
+        const arrivePos = new google.maps.LatLng(lat,lng);
+
+   var request = {
+       origin:mypos,
+       destination:arrivePos,
+       travelMode: "TRANSIT",
+       transitOptions:{
+       	modes:['RAIL'],
+       }
+   };
+   
+   var directionsService = new google.maps.DirectionsService();
+   var directionsDisplay = new google.maps.DirectionsRenderer();
+   maps = new google.maps.Map(document.getElementById('map'), map);
+   directionsDisplay.setMap(maps);
+   
+   directionsService.route(request, function(response, status) {
+     alert(status+"  (전철이 없을경우 버스 경로가 나옵니다)");  // 확인용 Alert..미사용시 삭제
+      if (status === google.maps.DirectionsStatus.OK) {
+    	  directionsDisplay.setDirections(response);
+    	  
+   	  }else{
+   		  return getDb()
+   		  };
+   }
+   	)
+})}
+
+/////////////// 버스로 길찾기/////////////////////////////////////////////////////////////////////////
+
+function calcRouteByBus(lat,lng) {
+	navigator.geolocation.getCurrentPosition(
+    (position) => {
+  	   const myLat = position.coords.latitude;
+      const myLng = position.coords.longitude;	 
+      const mypos = new google.maps.LatLng(myLat,myLng);
+         const arrivePos = new google.maps.LatLng(lat,lng);
+
+    var request = {
+        origin:mypos,
+        destination:arrivePos,
+        travelMode: "TRANSIT",
+        transitOptions:{
+        	modes:['BUS'],
+        }
+    };
+    let directionsService = new google.maps.DirectionsService();
+    let directionsDisplay = new google.maps.DirectionsRenderer();
+    maps = new google.maps.Map(document.getElementById('map'), map);
+    directionsDisplay.setMap(maps);
+    directionsService.route(request, function(response, status) {
+      alert(status+"  (버스가 없을경우 전철 경로가 나옵니다)");  // 확인용 Alert..미사용시 삭제
+       if (status === google.maps.DirectionsStatus.OK) {
+     	  directionsDisplay.setDirections(response);
+     	  
+    	  }else{
+    		  return getDb()
+    		  };
+ 		 }
+ 	)
+})}
+
+
+/////////////// 맛집 정보 조건부로 가져오기/////////////////////////////////////////////////////////////////////////
+
+function getRestaurant(){
+		let gugun_nm = [[${tourist_Spot.gugun_nm}]];
+    $.ajax({
+      url: "/restaurant/",
+      type: "post",
+      success: function (data, success, xhr) {
+       //지역 정하기 
+        const data1 = data.filter((item)=>{
+       	 return item.gugun_nm==gugun_nm ;
+       	 })
+       	if(data1.length !== 0){
+         	findRestaurant(data1);
+           	 }else{alert("주변 맛집이 없습니다")};
+          },
+      error: function (xhr, status, error) {
+    	  console.log(status);
+      }
+    });
+	}	
+/////////////// 맛집 정보 지도에 표시하기/////////////////////////////////////////////////////////////////////////
+
+function findRestaurant(data1){
+		let lat = [[${tourist_Spot.lat}]];
+    let lng = [[${tourist_Spot.lng}]];
+		const main_title = [[${tourist_Spot.main_title}]];
+		const itemcntnts= [[${#strings.abbreviate(tourist_Spot.itemcntnts,80)}]];
+    const img_date = [[${tourist_Spot.main_img_normal}]]
+ 	 
+ 	
+    const positions= new google.maps.LatLng(lat,lng);
+    
+    
+    //로케이션 별로 마크 생성
+  /* 	marker = new google.maps.Marker({
+      position: new google.maps.LatLng(lat,lng),
+      map:map,
+      animation: google.maps.Animation.DROP,
+    	//icon: 'your-icon.png'
+  	}); */
+	
+	//console.log(data1);
+  //구군의 맛집리스트 추가
+  
+
+ const infowindow = new google.maps.InfoWindow();
+ let i,res;
+ //맛집마커
+ let marker;
+ //명소마커
+ let marker2;
+ //icons
+ const icons ={
+			restaurant:'/image/restaurant.png',
+			attraction:'/image/attraction.png',
+			festival:'.image/concert.png'
+	}
+ 
+	//maps api 객체생성
+	let map= new google.maps.Map(document.getElementById("map"),{
+		 zoom:14,
+		 center : new google.maps.LatLng(lat, lng),
+		 mapTypeId: google.maps.MapTypeId.ROADMAP,
+		});	
+ 
+ //명소위치
+const pos = new google.maps.LatLng(lat,lng);
+ 
+ marker2 = new google.maps.Marker({
+          position: pos,
+          map:map,
+          icon:icons.attraction
+      });
+ 
+   google.maps.event.addListener(
+           marker2,
+           "click",
+           (function(marker2){
+               return function (){
+            	   	infowindow.setContent("<img src="+img_date+" class='asd'>"+"<h1>"+main_title+"</h1>"+"<p>"+itemcntnts);
+                  infowindow.open(map,marker2);
+                   if (marker.getAnimation() !== null) {
+                       marker.setAnimation(null);
+                     } else {
+                       marker.setAnimation(google.maps.Animation.BOUNCE);
+                     }
+               };
+               })(marker2,pos)
+       	);
+
+	for(i=0; i<data1.length;i++){
+ 	res = data1.find((item,index)=>{
+ 		if(index==i){
+ 			let lat=[];
+ 		 	let lng=[];
+ 	    	lat +=item["lat"]; 
+ 	    	lng +=item["lng"];	
+ 	    	let restaurant_id=[];
+    	    	restaurant_id +=item["restaurant_id"];
+    	    	
+    	    	let mainImgNormal =item["main_img_normal"];
+    	    	let rprsntv_menu =item["rprsntv_menu"];
+    	    	let cntct_tel =item["cntct_tel"];
+    	    	let addr1 =item["addr1"];
+    	    	// icons 선언
+    	    	
+    	    	
+    	    	let main_title = item["main_title"];
+				 	    	 //로케이션 별로 마크 생성
+			            marker = new google.maps.Marker({
+	                position: new google.maps.LatLng(lat,lng),
+	                map:map,
+	                animation: google.maps.Animation.DROP,
+	              	icon: icons.restaurant,
+	            });
+	            const positions= new google.maps.LatLng(lat,lng);
+	            // 마크를 글릭햇을 때 보여주는 경로
+	            google.maps.event.addListener(
+	                marker,
+	                "click",
+	                (function(marker){
+	                    return function (){
+	                        infowindow.setContent("<h3>"+main_title+"</h3>"
+	                        +"<img src='"+mainImgNormal+"' alt='restaurant image' style='width: 300px; height: 200px;'><br>"
+	                        +"<p>"+"<h5> 대표메뉴 : "+rprsntv_menu+"</h5>"+"<p>"+"<h5> 대표 전화번호 : "+cntct_tel+"</h5>"+"<p>"+"<h5> 주소 : "+addr1+"</h5>"+"<p>"+"<p>"
+	                        /* +"<button type='button' class='btn btn-outline-primary' onclick=\"location.href='/restaurant/RestaurantInfo?restaurant_id=" + restaurant_id + "'\">레스토랑 정보</button>" */
+	                        +"<button type='button' class='btn btn-outline-primary' onclick='calcRoute(" +lat+","+lng + ")'>명소에서 최단 거리 찾기</button> "
+	                        );
+	                        infowindow.open(map,marker);
+	                        if (marker.getAnimation() !== null) {
+		                        marker.setAnimation(null);
+		                      } else {
+		                        marker.setAnimation(google.maps.Animation.BOUNCE);
+		                      }
+	                    };
+	                    })(marker,i)
+	            	);
+ 			return item
+ 		}return false;
+ 	})
+	}
+}
+
+/////////////// 최단경로 길찾기/////////////////////////////////////////////////////////////////////////
+
+function calcRoute(lat,lng) {
+	
+	navigator.geolocation.getCurrentPosition(
+      (position) => {
+     	 
+			let touristLat = [[${tourist_Spot.lat}]];
+			let touristLng = [[${tourist_Spot.lng}]];
+        const mypos = new google.maps.LatLng(touristLat,touristLng);
+        const arrivePos = new google.maps.LatLng(lat,lng);
+
+      var request = {
+          origin:mypos,
+          destination:arrivePos,
+          travelMode: "TRANSIT",
+          }
+      let directionsService = new google.maps.DirectionsService();
+      let directionsDisplay = new google.maps.DirectionsRenderer();
+      maps = new google.maps.Map(document.getElementById('map'), map);
+      directionsDisplay.setMap(maps);
+      directionsService.route(request, function(response, status) {
+        //alert(status);  // 확인용 Alert..미사용시 삭제
+         if (status === google.maps.DirectionsStatus.OK) {
+       	  directionsDisplay.setDirections(response);
+       	  for (i = 0; i < response.routes.length; i++) {
+       		  let route = response.routes[i];
+       	        for (j = 0; j < route.legs.length; j++) {
+       	        	let leg = route.legs[j];
+       	            // Do something with leg attributes...
+       	            let instruction1 ='';
+       	            for (k = 0; k < leg.steps.length; k++) {
+       	            	let step = leg.steps[k];
+       	            	let distance = step.distance.text;    // fine
+       	            	let duration = step.duration.text;    // fine
+       	            	let instruction = step.instructions +" "+duration+",";   ////////////////////
+       	                instruction1 += instruction;
+       	                let mode = step.travel_mode;          // works
+       	            }
+       	            let result1 = instruction1.slice(0, -1);
+       	                console.log(result1); 
+       	            $("#mapContent").append(result1);
+       	        }        
+       	    }
+      	  }else{
+   		return getDb()
+  	 };
+   }
+  )
+ })}	
+
+
+/////////////// 좋아요/////////////////////////////////////////////////////////////////////////
+function like(touristSpotId) {
+
+	
+	console.log(touristSpotId);
+ 	$.ajax({
+ 	url: "like",
+ 	type: "POST",
+ 	data: { touristSpotId: touristSpotId },
+ 	success: function (result) {
+ 		        if (result.liked===true) {
+ 		          alert("좋아요가 추가되었습니다.");
+	 		         $(".like_img").attr({
+	 		            'src': 'https://cdn-icons-png.flaticon.com/512/803/803087.png',
+	 		            alt: '좋아요'
+	 		          });	
+ 		        } else {
+ 		          alert("좋아요가 삭제되었습니다.");
+ 		         		$(".like_img").attr({
+	 		            'src': '/image/heart-regular.svg',
+	 		            alt: '좋아요삭제'
+	 		          });	
+ 		        }
+ 		    },
+ 		error: function (xhr, status, error) {
+ 		console.error(error);
+ 	}		
+ });
+}  
+
+
+/////////////// 찜 기능 /////////////////////////////////////////////////////////////////////////
+function myList(touristSpotId) {
+	console.log(touristSpotId);
+	
+	$.ajax({
+	url: "myList",
+	type: "POST",
+	data: { touristSpotId: touristSpotId },
+	success: function (result) {
+		        if (result.jjim===true) {
+		          alert("찜 목록에 추가되었습니다.");
+		          $(".wish_img").attr({
+	 		            'src': '/image/bookmark-solid%20(2).svg',
+	 		            alt: '찜하기'
+	 		          });	
+		        } else {
+		          alert("찜 목록에서 삭제되었습니다.");
+		          $(".wish_img").attr({
+	 		            'src': '/image/bookmark-regular (1).svg',
+	 		            alt: '찜삭제'
+	 		          });	
+		          }
+		    },
+	error: function (xhr, status, error) {
+	console.error(error);
+	}
+	});
+}
+</script>
+
+<script>
+		
+    $(function () {
+      $("#spot-header-container > div").hide();
+      $('.tabnav a').click(function () {
+        $('#spot-header-container > div').hide().filter(this.hash).fadeIn();
+        $('.tabnav a').removeClass('active');
+        $(this).addClass('active');
+        return false;
+      }).filter(':eq(0)').click();
+    });
+
+
+    
+    //좋아요 버튼
+    $(function like() {
+      var $likeBtn = $('.icon.heart');
+
+      $likeBtn.click(function () {
+        $likeBtn.toggleClass('active');
+				//active가 잇으면
+        if ($likeBtn.hasClass('active')) {
+         		 $(this).find('img').attr({
+            'src': 'https://cdn-icons-png.flaticon.com/512/803/803087.png',
+            alt: '좋아요하기 완료'
+          });
+
+
+        } 
+        //active가 없는경우
+        else {
+          $(this).find('i').removeClass('fas').addClass('far')
+          $(this).find('img').attr({
+            'src': '/image/heart-regular.svg',
+            alt: "좋아요하기"
+          })
+        }
+      })
+    });
+
+    //찜하기 버튼
+    /* $(function wish(){
+      var $wishBtn = $('.icon.wish');
+
+      $wishBtn.click(function () {
+        $wishBtn.toggleClass('active');
+				
+        if ($wishBtn.hasClass('active')) {
+          $(this).find('img').attr({
+            'src': '/image/bookmark-solid%20(2).svg',
+            alt: '찜하기 완료'
+          });
+
+        } else {
+          $(this).find('i').removeClass('fas').addClass('far')
+          $(this).find('img').attr({
+            'src': '/image/bookmark-regular%20(1).svg',
+            alt: "찜하기"
+          })
+        }
+      })
+    }) */
+          
+  </script>
+</head>
+
+
+<body>
+
+	<div th:replace="fragments/header :: header"></div>
+	<div id="container" th:object="${tourist_Spot}">
+		<nav class="tabnav">
+			<a class="item" href="#itemcntnts">상세 정보</a> <a class="item"
+				href="#information">이용 정보</a> <a class="item" href="#mapContainer"
+				onclick="getRestaurant()">주변 맛집 지도</a>
+		</nav>
+
+		<div id="spot-header-container">
+			<div class="itemcntnts" id="itemcntnts">
+
+				<img th:src="*{main_img_normal}" th:alt="*{main_title}">
+
+				<div class="heartWish">
+					<div class="left_area">
+						<a th:unless="${#lists.contains(findTouristSpotLikes, member_id)}"
+							href="javascript:;" class="icon heart"
+							th:onclick="|like(*{tourist_Spot_id})|"> <img
+							class="like_img" src="/image/heart-regular.svg" alt="하트">
+						</a>
+						<!--좋아요를 햇으면  -->
+						<a th:if="${#lists.contains(findTouristSpotLikes, member_id)}"
+							href="javascript:;" class="icon heart"
+							th:onclick="|like(*{tourist_Spot_id})|"> <img
+							class="like_img"
+							src="https://cdn-icons-png.flaticon.com/512/803/803087.png"
+							alt="하트">
+						</a>
+					</div>
+
+					<div class="right_area">
+
+						<a
+							th:unless="${#lists.contains(findTouristSpotMyList, member_id)}"
+							href="javascript:;" class="icon wish"
+							th:onclick="|myList(*{tourist_Spot_id})|"> <img
+							class="wish_img" src="/image/bookmark-regular%20(1).svg"
+							alt="찜하기">
+						</a>
+						<!--찜을 햇으면  -->
+						<a th:if="${#lists.contains(findTouristSpotMyList, member_id)}"
+							href="javascript:;" class="icon wish"
+							th:onclick="|myList(*{tourist_Spot_id})|"> <img
+							class="wish_img" src="/image/bookmark-solid%20(2).svg" alt="찜하기">
+						</a>
+					</div>
+				</div>
+
+
+
+
+				<div class="explain">
+					<h3 th:text="*{itemcntnts}"></h3>
+				</div>
+			</div>
+
+			<div class="information" id="information">
+				<table class="information-table" border="1px solid black">
+					<tr>
+						<td>주소</td>
+						<td th:text="*{addr1}"></td>
+					</tr>
+					<tr>
+						<td>전화번호</td>
+						<td th:text="*{cntct_tel}"></td>
+					</tr>
+					<tr>
+						<td>홈페이지</td>
+						<td><a href="*{homepage_url}" th:text="*{homepage_url}"></a></td>
+					</tr>
+					<tr>
+						<td>휴무일</td>
+						<td th:text="*{hldy_info}"></td>
+					</tr>
+					<tr>
+						<td>운영요일 및 시간</td>
+						<td th:text="*{usage_day_week_and_time}"></td>
+					</tr>
+					<tr>
+						<td>요금</td>
+						<td th:text="*{usage_amount}"></td>
+					</tr>
+					<tr>
+						<td>교통정보</td>
+						<td th:text="*{trfc_info}"></td>
+					</tr>
+				</table>
+
+			</div>
+
+			<div id="mapContainer">
+				<div id="map"></div>
+				<div id="mapContent"></div>
+			</div>
+
+
+			<script async
+				src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZDS2Huu1p2-ZjV4J6TzNyJikS9OCVqkw&callback=getRestaurant&v=weekly"></script>
+
+
+
+
+		</div>
+	</div>
+
+
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+
+<title>FROMBUSAN</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<link rel="stylesheet" href="/css/header.css" />
+<link rel="stylesheet" href="/css/index.css" />
+
+<script src="/js/index.js" ></script>
+
+<script th:inline="javascript" >
+
+function calcRoute() {
+    var start = document.getElementById('start').value;
+    var end = document.getElementById('end').value;
+    var mode = "TRANSIT";
+		
+    var request = {
+        origin:start,
+        destination:end,
+        travelMode: eval("google.maps.DirectionsTravelMode."+mode)
+    };
+    
+    directionsService.route(request, function(response, status) {
+  	  
+      
+      if (status == google.maps.DirectionsStatus.OK) {
+          directionsDisplay.setDirections(response);
+          
+          for (i = 0; i < response.routes.length; i++) {
+    		  let route = response.routes[i];
+    	        for (j = 0; j < route.legs.length; j++) {
+    	        	let leg = route.legs[j];
+    	            // Do something with leg attributes...
+    	            let instruction1 ='';
+    	            for (k = 0; k < leg.steps.length; k++) {
+    	            	let step = leg.steps[k];
+    	            	let distance = step.distance.text;    // fine
+    	            	let duration = step.duration.text;    // fine
+    	            	let instruction = step.instructions +" "+duration+",";   ////////////////////
+    	                
+    	                instruction1 += instruction;
+    	                let mode = step.travel_mode;          // works
+    	            }
+    	            let result1 = instruction1.slice(0, -1);
+    	                console.log(result1); 
+    	            $("#mapContent").append(result1);
+    	        }        
+    	    }
+      }
+    });
+  } 
+
+var directionsDisplay;
+var directionsService = new google.maps.DirectionsService();
+var map;
+
+// 초기화면 표시지점
+function initialize() {
+  directionsDisplay = new google.maps.DirectionsRenderer();
+
+  var busan = new google.maps.LatLng(35.15, 129.0756416);
+  
+  var mapOptions = {
+    zoom:12,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    center: busan
+  }
+  map = new google.maps.Map(document.getElementById('map'), mapOptions);
+  directionsDisplay.setMap(map);
+}
+
+// 초기화면 표시
+google.maps.event.addDomListener(window, 'load', initialize);
+
+</script>
+
+
+
+</head>
+<body>
+	<div th:replace="fragments/header :: header"></div>
+
+
+	<video preload="auto" muted autoplay loop>
+		<source
+			src="https://www.busan.go.kr/humanframe/theme/busan22/assets/video/main_v2.mp4"
+			type="video/mp4" />
+	</video>
+	<div id="container">
+	
+		
+		<!-- 길찾기            완성햇는데, 밑에 명소*축제사진들이랑 위치 겹쳐지길래 지워둘게. 주석풀면 실행됨
+		<div id="panel" >
+            <b>Start: </b>
+            <input type="text" id="start" />
+            <b>End: </b>
+            <input type="text" id="end" />
+            <div>
+                <strong>Mode of Travel: </strong>
+                <select id="mode">
+                <option value="TRANSIT">Transit</option>
+                </select>
+                <input type="button" value="길찾기" onclick="calcRoute()" />
+            </div>
+        </div>
+
+		<div id="map-container">
+			<div id="map"></div>
+			<div id="map-contents">
+				<div id="mapContent"></div>
+			</div>
+		</div>
+		-->
+
+
+		<!--인기명소-->
+		<div id="tourist-spot-container">
+
+			<div id="tourist-spot-title">
+				<span style="color: #111;">인기 명소</span>
+				<div class="tourist-spot-title-right">
+					<a href="/tourist/list" style="color: #da202c;">자세히&#8594;</a>
+					<div>
+						<i class="fa-sharp fa-solid fa-play fa-rotate-180 fa-xs imagel"
+							style="color: #2f4365;"> </i> <i
+							class="fa-sharp fa-solid fa-play fa-xs imager"
+							style="color: #2f4365;"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="image-container">
+
+			<div class="inner" th:each="tour : ${tourist}">
+				<!-- card -->
+				<img th:alt="${tour.main_title}"
+					th:src="${tour.main_img_normal}">
+				<div class="innerContent">
+					<a
+						th:href="@{/tourist/TouristInfo(tourist_Spot_id=${tour.tourist_Spot_id})}"
+						th:text="${tour.main_title}"></a> <i
+						class="far fa-heart testHeart"
+						style="color: #da202c; margin-left: 10px" title="like"></i> <span
+						th:text="${tour.place_like}" style="font-size: 24px"></span>
+				</div>
+
+			</div>
+		</div>
+		
+		
+
+
+
+		<!-- tourist -->
+		<div id="tourist-spot-container">
+
+			<div id="tourist-spot-title">
+				<span style="color: #111;">인기 축제</span>
+				<div class="tourist-spot-title-right">
+					<a href="/festival/list" style="color: #da202c;">자세히&#8594;</a>
+					<div>
+						<i class="fa-sharp fa-solid fa-play fa-rotate-180 fa-xs imageL"
+							style="color: #2f4365;"> </i> <i
+							class="fa-sharp fa-solid fa-play fa-xs imageR"
+							style="color: #2f4365;"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="festival-container">
+
+			<div class="inner" th:each="festival : ${festival}">
+				<!-- card -->
+				<img th:alt="${festival.main_title}"
+					th:src="${festival.main_img_normal}">
+				<div class="innerContent">
+					<a
+						th:href="@{/festival/FestivalInfo(festival_id=${festival.festival_id})}"
+						th:text="${festival.main_title}"></a> <i
+						class="far fa-heart testHeart"
+						style="color: #da202c; margin-left: 10px" title="like"></i> <span
+						th:text="${festival.place_like}" style="font-size: 24px"></span>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+	
+	let page = 0; //현재 page
+	//오른쪽
+	document.querySelector('.imager').addEventListener('click',()=>{
+		page-=1200;
+		document.querySelector('.image-container').style.transform = 'translate('+page+'px)';
+		
+	});
+	//왼쪽
+	document.querySelector('.imagel').addEventListener('click',()=>{
+		if(page<0){
+		page+=1200;
+		document.querySelector('.image-container').style.transform = 'translate('+page+'px)';
+		}
+	});
+	
+	let page1 = 0; //현재 page
+	//오른쪽
+	document.querySelector('.imageR').addEventListener('click',()=>{
+		page1-=1200;
+		document.querySelector('.festival-container').style.transform = 'translate('+page1+'px)';
+		
+	});
+	//왼쪽
+	document.querySelector('.imageL').addEventListener('click',()=>{
+		if(page1<0){
+		page1 +=1200;
+		document.querySelector('.festival-container').style.transform = 'translate('+page1+'px)';
+		}
+	});
+	</script>
+	<!-- <script
+        async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZDS2Huu1p2-ZjV4J6TzNyJikS9OCVqkw&callback=getRestaurant&v=weekly"
+        ></script> -->
+	<!-- <script
+        async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZDS2Huu1p2-ZjV4J6TzNyJikS9OCVqkw&callback=getRestaurant&v=weekly"
+        ></script> -->
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="headFragment">
+		<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+		</head>
+		
+		<body th:fragment="header">
+			<div id="header-container">
+      <header>
+        <!-- 로고 -->
+        <a class="logo" href="/">
+          <img class="logoImage" src="/image/logo.png" alt="logo" />
+        </a>
+        <nav>
+         	<div class="top-nav">
+          	<div th:unless="${session.loginMember}">
+	            <a href="/member/login">로그인</a>
+	            <a href="/member/join">회원가입</a>
+            </div>
+           	<div class="top-nav" th:if="${session.loginMember}">
+	          	<a href="#">마이페이지</a>
+	          	<a href="/member/logout">로그아웃</a>
+      			</div>
+      			<div> 
+            <a href="#"> <i class="fa-solid fa-globe">&nbsp;</i>언어</a>
+            </div>
+          </div>
+          
+          <!-- nav -->
+          <nav class="main-nav">
+            <ul>
+              <li>
+                <a href="#">볼 것</a>
+                <nav class="subMenu">
+                  <ul class="dropdown-menu">
+                    <li><a href="/tourist/list">명소</a></li>
+                    <li><a href="/festival/list">축제</a></li>
+                  </ul>
+                </nav>
+              </li>
+              <li>
+                <a onclick="location.href='/course/list'">추천 코스</a>
+                <nav class="subMenu">
+                  <ul class="dropdown-menu">
+                    <li><a href="#">1번코스</a></li>
+                    <li><a href="#">2번코스</a></li>
+                    <li><a href="#">3번코스</a></li>
+                    <li><a href="#">4번코스</a></li>
+                    <li><a href="#">5번코스</a></li>
+                  </ul>
+                </nav>
+              </li>
+              <li>
+                  <a href="/review/list">후기 게시판</a>
+                  <nav class="subMenu">
+                    <ul class="dropdown-menu">
+                      <li><a href="#"></a></li>
+                      <li><a href="#"></a></li>
+                    </ul>
+                  </nav>
+                </li>
+            </ul>
+          </nav>
+        </nav>
+      </header>
+    </div>
+		</body>
+	</th:block>
+</html>

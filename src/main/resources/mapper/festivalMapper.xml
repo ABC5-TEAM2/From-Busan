@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frombusan.repository.FestivalMapper">
+    
+    <select id="findFestivalLat" resultType="double">
+        select lat from festival where festival_id=70
+    </select>
+    
+    
+      <select id="findFestivalLng" resultType="double">
+        select lng from festival where festival_id=70
+        
+        
+    </select>
+    
+     <select id="findFestival" resultType="festival">
+        select * from festival where festival_id=#{festival_id}
+    </select>
+    
+    
+    
+    <select id="findAllFestival" resultMap="festivalResultMap">
+        select itemcntnts,festival_id,place_like,main_img_normal,main_title,hit 
+        from festival order by hit desc
+    </select>
+   	<resultMap type="festival" id="festivalResultMap">
+		<id property="id" column="id" />
+		<result property="hit" column="hit" />
+	</resultMap>
+    
+    
+    
+    
+    
+    <select id="getTotal" resultType="int">
+        select count(*) from festival 
+    </select>
+    
+    <select id="findAllFestivalName" resultType="festival">
+        select MAIN_TITLE from festival 
+    </select>
+    
+     <!-- ///////////////////////////////////////////////////////////////////////////////// -->
+    
+    <update id="updateFestival">
+        update festival
+        <set>
+            <if test="place_like != null">place_like = #{place_like},</if>
+            <if test="hit != null">hit = #{hit},</if>
+            <if test="wish_list_fes != null">wish_list_fes = #{wish_list_fes},</if>
+        </set>
+        where festival_id = #{festival_id}
+    </update>
+    
+    <select id="findLikesMemberId" resultType="string">
+        select member_id from festival_likes where festival_id=#{festival_id}
+    </select>
+    
+    <select id="findLikesById" resultType="map">
+        select member_id,like_id from festival_likes where festival_id=#{festival_id}
+    </select>
+    
+    <insert id="saveLikes">
+    <selectKey keyProperty="like_id" resultType="long" order="BEFORE">
+            select seq_review.nextval from dual
+        </selectKey>
+        insert into festival_likes (
+        	like_id,
+            member_id,
+            festival_id
+        ) values (
+            #{like_id},
+            #{member_id},
+            #{festival_id}
+        )
+    </insert>
+    
+     <delete id="deleteLike">
+        delete from festival_likes where like_id = #{like_id} 
+    </delete>
+    
+<!-- /////////////////찜 기능//////////////////////////////////////////////////////////////// -->
+    
+    <insert id="saveMyList">
+    <selectKey keyProperty="wishboard_id" resultType="long" order="BEFORE">
+            select seq_review.nextval from dual
+        </selectKey>
+        insert into wish_list_fes (
+        	wishboard_id,
+            member_id,
+            festival_id
+        ) values (
+            #{wishboard_id},
+            #{member_id},
+            #{festival_id}
+        )
+    </insert>
+    
+    <select id="findMyListById" resultType="map">
+        select member_id, wishboard_id from wish_list_fes where festival_id=#{festival_id}
+    </select>
+    
+      <select id="findMyListMemberId" resultType="string">
+        select member_id from wish_list_fes where festival_id=#{festival_id}
+    </select>
+    
+    <delete id="deleteMyList">
+        delete from wish_list_fes where wishboard_id = #{wishboard_id} 
+    </delete>
+    
+    
+        
+ <!-- /////////////////찜 목록//////////////////////////////////////////////////////////////// -->
+
+	 <select id="findMyListByMemberId" resultType="map">
+        select festival_id from wish_list_fes where member_id=#{member_id}
+    </select>
+    
+    
+</mapper>

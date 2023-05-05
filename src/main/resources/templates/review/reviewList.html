@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판 리스트</title>
+    <link rel="stylesheet" href="/css/default.css">
+    <script>
+      function search() {
+        let searchText = document.getElementById("searchText").value;
+        location.href="/review/list?searchText=" + searchText;
+      }
+    </script>
+</head>
+<body>
+<div id="container">
+  <h1>[ 게시판 - 리스트 ]</h1>
+  <div class="right">
+    <label for="searchText">검색</label>
+    <input type="search" id="searchText" name="searchText" th:value="${searchText}">
+    <input type="button" onclick="search()" value="검색">
+  </div>
+  <p>
+  <table>
+    <tr>
+      <th>No</th>
+      <th>리뷰 장소</th>
+      <th>제목</th>
+      <th>작성자</th>
+      <th>조회수</th>
+      <th>작성일</th>
+    </tr>
+    <tr th:if="${findReviewsByMainTitle}" th:each="review, reviewStat: ${findReviewsByMainTitle}">
+      <td th:text="${reviewStat.count}" class="center"></td>
+      <td th:text="${review.review_place}" class="center"></td>
+      <td class="center"><a th:text="${review.title}" th:href="@{/review/read(review_id=${review.review_id})}"></a></td>
+      <td th:text="${review.member_id}" class="center"></td>
+      <td th:text="${review.hit}" class="center"></td>
+      <td th:text="${#temporals.format(review.created_time, 'yyyy-MM-dd HH:mm')}" class="center"></td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(findReviewsByMainTitle)}" >
+	    <td class="center" colspan="6">리뷰가 없습니다.</td>
+	  </tr> 
+   
+    
+  </table>
+  <p>
+  
+  <p>
+  <div class="center">
+    <input type="button" onclick="location.href='/review/list'" value="목록으로">
+    <input type="button" onclick="location.href='/review/write'" value="글쓰기">
+    <input type="button" onclick="location.href='/'" value="메인으로">
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frombusan.repository.TouristSpotMapper">
+
+	<select id="findTouristLat" resultType="double">
+		select lat from tourist_Spot where festival_id=70
+
+	</select>
+
+	<select id="findTouristLng" resultType="double">
+		select lng from tourist_Spot where festival_id=70
+	</select>
+
+
+	<select id="findTouristSpot" resultType="tourist">
+		select * from tourist_Spot where tourist_Spot_id=#{tourist_Spot_id}
+	</select>
+
+	<select id="findAllTourist" resultMap="touristResultMap">
+		select itemcntnts,tourist_spot_id,place_like,main_img_normal,main_title, hit from
+		tourist_spot order by hit desc
+	</select>
+    <resultMap type="tourist" id="touristResultMap">
+		<id property="id" column="id" />
+		<result property="hit" column="hit" />
+	</resultMap>
+	
+	
+	
+	
+	<select id="getTotal" resultType="int">
+		select count(*) from tourist_Spot
+	</select>
+	<!-- /////////////////좋아요 기능//////////////////////////////////////////////////////////////// -->
+
+
+	<update id="updateTourist">
+		update tourist_Spot
+		<set>
+			<if test="place_like != null">place_like = #{place_like},</if>
+		</set>
+		where tourist_Spot_id = #{tourist_Spot_id}
+	</update>
+
+	<select id="findLikesMemberId" resultType="string">
+		select member_id from tourist_spot_likes where
+		tourist_Spot_id=#{tourist_Spot_id}
+	</select>
+
+	<select id="findLikesById" resultType="map">
+		select member_id,like_id from tourist_spot_likes where
+		tourist_Spot_id=#{tourist_Spot_id}
+	</select>
+
+	<insert id="saveLikes">
+		<selectKey keyProperty="like_id" resultType="long"
+			order="BEFORE">
+			select seq_review.nextval from dual
+		</selectKey>
+		insert into tourist_spot_likes (
+		like_id,
+		member_id,
+		tourist_Spot_id
+		) values (
+		#{like_id},
+		#{member_id},
+		#{tourist_Spot_id}
+		)
+	</insert>
+
+	<delete id="deleteLike">
+		delete from tourist_spot_likes where like_id = #{like_id}
+	</delete>
+
+	<!-- /////////////////찜 기능//////////////////////////////////////////////////////////////// -->
+
+	<insert id="saveMyList">
+		<selectKey keyProperty="wishboard_id" resultType="long"
+			order="BEFORE">
+			select seq_review.nextval from dual
+		</selectKey>
+		insert into wish_list (
+		wishboard_id,
+		member_id,
+		tourist_Spot_id
+		) values (
+		#{wishboard_id},
+		#{member_id},
+		#{tourist_Spot_id}
+		)
+	</insert>
+
+	<select id="findMyListById" resultType="map">
+		select member_id, wishboard_id from wish_list where
+		tourist_Spot_id=#{tourist_Spot_id}
+	</select>
+
+	<select id="findMyListMemberId" resultType="string">
+		select member_id from wish_list where tourist_Spot_id=#{tourist_Spot_id}
+	</select>
+
+	<delete id="deleteMyList">
+		delete from wish_list where wishboard_id = #{wishboard_id}
+	</delete>
+
+	<!-- /////////////////찜 목록//////////////////////////////////////////////////////////////// -->
+
+	<select id="findMyListByMemberId" resultType="map">
+		select tourist_Spot_id from wish_list where member_id=#{member_id}
+	</select>
+	
+	 <update id="addHit">
+		update tourist_Spot
+		<set>
+			<if test="hit != null"> hit = #{hit}</if>
+		</set>
+		where tourist_Spot_id = #{tourist_Spot_id}
+	</update>
+</mapper>
