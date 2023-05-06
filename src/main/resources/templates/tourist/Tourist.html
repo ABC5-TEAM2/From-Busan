@@ -24,9 +24,17 @@
 				<div class="content">
 					<h2 th:text="${tourist.main_title}"></h2>
 					<p th:text="${#strings.abbreviate(tourist.itemcntnts,50)}"></p>
+					
+					
+					<div class="listItem">
+					 <i class="far fa-heart testHeart"
+						style="color: #da202c; font-size:20px" title="like"></i>  
+						<span th:text=" ${tourist.place_like}" style="font-size: 20px"></span>
+						<i class="fas fa-eye" style="font-size:20px" title="hits"></i>
+						<span th:text="${tourist.hit}" style="font-size: 20px"></span>
+						<!-- <a  th:utext="'조회수 : '+${tourist.hit}"></a> -->
+					</div>
 					<a th:href="@{/tourist/TouristInfo(tourist_Spot_id=${tourist.tourist_Spot_id})}">상세 보기</a>
-					<a  th:utext="'좋아요 수 : '+${tourist.place_like}"></a>
-					<a  th:utext="'조회수 : '+${tourist.hit}"></a>
 				</div>
 			</div>
 			
