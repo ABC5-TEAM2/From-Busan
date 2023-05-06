@@ -139,12 +139,9 @@ public class MemberController {
     
     
     @GetMapping("myPage")
-    public String myPage(@Validated @ModelAttribute("loginForm") LoginForm loginForm,
-                        BindingResult result,
-                        HttpServletRequest request
-                        ) {
-    	
-        return "member/myPage"  ;
+    public String myPage(Model model,@SessionAttribute(value="loginMember",required = false) Member loginMember) {
+    	model.addAttribute("loginMember",loginMember.getMember_id());
+        return "member/mypage"  ;
     }
     
 

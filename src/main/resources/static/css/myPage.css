@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho&display=swap');
+#myPage-container{
+    width: 1200px;
+    height: 600px;
+    margin: 0 auto;
+    display: flex;                  /*유연하게*/
+    flex-direction: column;         /*세로 방향 정렬*/
+    justify-content: center;        /*가로 정렬*/
+    align-items: center;            /*세로 정렬*/
+}
+
+body {
+    font-family: 'Shippori Mincho', serif;
+}
+
+h2 {
+    text-align: center;
+    font-size: 40px;
+    margin-bottom: 10%;
+    color: rgb(47, 47, 47);
+}
+
+.myPage{
+    font-size: 27px;
+}
+
+.MY{
+    display: flex;
+    justify-content: space-around;
+    width: 800px;
+}
+
+.in1 {
+    padding: 10px 30px;
+    text-align: center;
+    font-size: 30px;
+    color: #7e7e7e;
+    border: 2px solid #7e7e7e;
+    background: #fff;
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
+    transition: all ease-in-out 0.3s;
+}
+
+.in1:hover{
+    border-color: #fff;
+    background: #666;
+    color: #fff;
+}
+
+.in2 {
+    padding: 10px 30px;
+    text-align: center;
+    font-size: 30px;
+    color: #7e7e7e;
+    border: 2px solid #7e7e7e;
+    background: #fff;
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
+    transition: all ease-in-out 0.3s;
+}
+
+.in2:hover{
+    border-color: #fff;
+    background: #666;
+    color: #fff;
+}
+
+.in3 {
+    padding: 10px 30px;
+    text-align: center;
+    font-size: 30px;
+    color: #7e7e7e;
+    border: 2px solid #7e7e7e;
+    background: #fff;
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
+    transition: all ease-in-out 0.3s;
+}
+
+.in3:hover{
+    border-color: #fff;
+    background: #666;
+    color: #fff;
+}
