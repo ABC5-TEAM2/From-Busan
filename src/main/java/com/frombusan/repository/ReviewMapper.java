@@ -45,4 +45,12 @@ public interface ReviewMapper {
    	
    // Member ID로 작성한 글 찾기
    List<Review> findReviewsByMemberId(String member_id);
+   
+   
+   //모든mainTitle가져오기
+   List<String> findAllMainTitle();
+   
+   
+   
+   
 }

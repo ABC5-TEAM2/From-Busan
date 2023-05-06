@@ -2,11 +2,13 @@ package com.frombusan.controller;
 
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriUtils;
 
 import com.frombusan.model.AttachedImg;
@@ -29,6 +32,9 @@ import com.frombusan.model.member.Member;
 import com.frombusan.model.review.Review;
 import com.frombusan.model.review.ReviewUpdateForm;
 import com.frombusan.model.review.ReviewWriteForm;
+import com.frombusan.repository.FestivalMapper;
+import com.frombusan.repository.ReviewMapper;
+import com.frombusan.repository.TouristSpotMapper;
 import com.frombusan.service.ReviewService;
 import com.frombusan.util.PageNavigator;
 
@@ -42,19 +48,24 @@ import lombok.extern.slf4j.Slf4j;
 public class ReviewController {
 
     private final ReviewService reviewService;
-
+    private final TouristSpotMapper touristSpotMapper;
+    private final FestivalMapper fstivalMapper;
+    
     // 게시판 관련 상수 값
     final int countPerPage = 10;    // 페이지 당 글 수
     final int pagePerGroup = 5;     // 페이지 이동 그룹 당 표시할 페이지 수
-
+    
     @Value("${file.upload.path}")
     private String uploadPath;
 
     // 글쓰기 페이지 이동
     @GetMapping("write")
-    public String writeForm(Model model) {
+    public String writeForm(Model model,RedirectAttributes redirectAttributes) {
         // writeForm.html의 필드 표시를 위해 빈 BoardWriteForm 객체를 생성하여 model 에 저장한다.
         model.addAttribute("writeForm", new ReviewUpdateForm());
+        List<String> findAllName = reviewService.findAllMainTitle();
+        model.addAttribute("findAllName", findAllName);
+        
         // board/writeForm.html 을 찾아 리턴한다.
         return "review/write";
     }
@@ -64,25 +75,45 @@ public class ReviewController {
     public String write(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
                         @Validated @ModelAttribute("writeForm") ReviewWriteForm reviewWriteForm,
                         BindingResult result,
-                        @RequestParam(required = false) MultipartFile file,MultipartFile file2) {
+                        @RequestParam(required = false) MultipartFile file1,MultipartFile file2
+                        ,Model model,RedirectAttributes redirectAttributes) {
+    	
         // 로그인 상태가 아니면 로그인 페이지로 보낸다.
         if (loginMember == null) {
             return "redirect:/member/login";
         }
+        // findAllName 리스트에 review_place와 일치하는 값이 있는지 확인한다.
+        List<String> findAllName = reviewService.findAllMainTitle();
 
-        log.info("board: {}", reviewWriteForm);
-        // validation 에러가 있으면 board/write.html 페이지를 다시 보여준다.
+        model.addAttribute("findAllName", findAllName);
+        
         if (result.hasErrors()) {
-            return "review/write";
-        }
+            model.addAttribute("findAllName", findAllName);
+            return "review/write";}
 
+        if (!findAllName.contains(reviewWriteForm.getReview_place())) {
+            model.addAttribute("placeError", "일치하는 장소가 없습니다.");
+            model.addAttribute("findAllName", findAllName);
+            return "review/write";}
+
+        // title과 review_place에 대한 공백 검사
+        if (reviewWriteForm.getTitle()==null || reviewWriteForm.getReview_place()==null) {
+            // validation 에러 메시지를 BindingResult에 추가합니다.
+            result.rejectValue("title", "NotEmpty");
+            result.rejectValue("review_place", "NotEmpty");
+            // board/write.html 페이지를 다시 보여줍니다.
+            redirectAttributes.addFlashAttribute("findAllName", findAllName);
+            return "review/write"; }
+      
         // 파라미터로 받은 BoardWriteForm 객체를 Board 타입으로 변환한다.
         Review review = ReviewWriteForm.toReview(reviewWriteForm);
         // board 객체에 로그인한 사용자의 아이디를 추가한다.
         review.setMember_id(loginMember.getMember_id());
         // board 객체를 저장한다.
-        reviewService.saveReview(review, file,file2);
-
+        
+        // board 객체를 저장한다.
+        reviewService.saveReview(review, file1,file2);
+   
         // board/list 로 리다이렉트한다.
         return "redirect:/review/list";
     }
@@ -128,7 +159,6 @@ public class ReviewController {
 
         // 첨부파일을 찾는다.
         List<AttachedImg> files = reviewService.findFilesByReviewId(review_id);
-        log.info("files :{}",files);
         model.addAttribute("files", files);
 
         // board/read.html 를 찾아서 리턴한다.
@@ -153,7 +183,6 @@ public class ReviewController {
 
         // 첨부파일을 찾는다.
         List<AttachedImg> files = reviewService.findFilesByReviewId(review_id);
-        log.info("files :{}",files);
         model.addAttribute("files", files);
 
         // board/update.html 를 찾아서 리턴한다.

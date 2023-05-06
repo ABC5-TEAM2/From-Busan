@@ -118,4 +118,8 @@
 		</set>
 		where tourist_Spot_id = #{tourist_Spot_id}
 	</update>
+	
+
+	
+	
 </mapper>

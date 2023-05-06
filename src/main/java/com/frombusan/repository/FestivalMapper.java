@@ -26,8 +26,6 @@ Double findFestivalLat(Long festival_id) ;
 	//페이징
 	List<Festival> findAllFestival(String searchText,RowBounds rowBounds);
 	
-	//review_place를 위해서
-	List<Object> findAllFestivalName();
 
 //좋아요 기능	
 	void updateFestival(Festival updateFestival);

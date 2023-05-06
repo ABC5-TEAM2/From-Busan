@@ -11,7 +11,16 @@
 	rel="stylesheet"
 	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
 	crossorigin="anonymous">
-
+	
+<link rel="stylesheet" href="/css/header.css" />
+<link rel="stylesheet" href="/css/Info.css" />
+<script src="/js/index.js"></script>
+<style type="text/css">
+.asd {
+	width: 400px;
+	height: 300px;
+}
+</style>
 <script th:inline="javascript">
 	
 
@@ -76,6 +85,7 @@ function myList(course_id) {
 
 </head>
 <body>
+	<div th:replace="fragments/header :: header"></div>
 	<div id="container" th:object="${course}">
 
 		<div class="btn-group" role="group"
@@ -112,7 +122,8 @@ function myList(course_id) {
 		</div>
 
 		<p>
-		<table class="center">
+		<table lass="btn-group" role="group"
+			aria-label="Basic mixed styles example">
 			<tr >
 				<th>코스 제목</th>
 				<td th:text="*{course_title}"></td>
@@ -124,7 +135,8 @@ function myList(course_id) {
 		</table>
 		<p>
 		
-		<table class="center">
+		<table lass="btn-group" role="group"
+			aria-label="Basic mixed styles example">
 			<thead>
 				<tr>
 					<th>사진</th>

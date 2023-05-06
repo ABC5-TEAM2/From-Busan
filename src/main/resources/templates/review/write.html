@@ -7,55 +7,97 @@
     <link rel="stylesheet" href="/css/header.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="/js/index.js"></script>
+    
+     <style>
+    #image-preview-container-1,
+    #image-preview-container-2{
+      border: none;
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: inline;
+      width: 100px;
+      height: 100px;
+    }
+    </style>
     <script th:inline="javascript">
     
-    function previewImage(event) {
-    	  var input = event.target;
-    	  var reader = new FileReader();
-    	  reader.onload = function(){
-    	    var img = document.createElement("img");
-    	    img.onload = function() {
-    	      var container = document.getElementById("image-preview-container");
-    	      var containerWidth = container.clientWidth;
-    	      var containerHeight = container.clientHeight;
-    	      var imageWidth = img.width;
-    	      var imageHeight = img.height;
-
-    	      if (imageWidth > containerWidth) {
-    	        imageHeight *= containerWidth / imageWidth;
-    	        imageWidth = containerWidth;
-    	      }
-
-    	      if (imageHeight > containerHeight) {
-    	        imageWidth *= containerHeight / imageHeight;
-    	        imageHeight = containerHeight;
-    	      }
-
-    	      container.innerHTML = '';
-    	      container.appendChild(img);
-    	      img.style.width = imageWidth + 'px';
-    	      img.style.height = imageHeight + 'px';
-    	    };
-    	    img.src = reader.result;
-    	  };
-    	  reader.readAsDataURL(input.files[0]);
-    	}
-    	</script>
-
-<style>
-#image-preview-container {
-
-  border: none; /* 테두리 제거 */
-
-  margin-top: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100px;
-  height: 100px;
-}
-</style>
+    function previewImage(event,idx) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function(){
+          var img = document.createElement("img");
+          img.onload = function() {
+            var container = document.getElementById("image-preview-container-"+ idx);
+            var containerWidth = container.clientWidth;
+            var containerHeight = container.clientHeight;
+            var imageWidth = img.width;
+            var imageHeight = img.height;
+            if (imageWidth > containerWidth) {
+              imageHeight *= containerWidth / imageWidth;
+              imageWidth = containerWidth;
+            }
+            if (imageHeight > containerHeight) {
+              imageWidth *= containerHeight / imageHeight;
+              imageHeight = containerHeight;
+            }
+            container.innerHTML = '';
+            container.appendChild(img);
+            img.style.width = imageWidth + 'px';
+            img.style.height = imageHeight + 'px';
+          };
+          img.src = reader.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+  	
     
+    // 파일의 확장자 필터
+  	 $(function(){
+  		$(".file").change(function(event) { // 이 부분 수정
+  	   	    var fm = $(".file");
+  	   	  	console.log(fm);
+	   	   	//alert($('input[type=file]')[0].files[0].name); //파일이름
+  	   	  	//alert("tests");
+  	   	    var fnm = fm.fileInput;
+  	   	    var filePath = $('input[type=file]')[0].files[0].name;
+  	   	    // 마지막 네자리가 jpg인지 확인
+  	   	    if (filePath.substr(filePath.length-3) === 'jpg' || 
+  	   	       filePath.substr(filePath.length-3) === 'png' ||
+	   	       filePath.substr(filePath.length-3) === 'gif' ||
+	   	       filePath.substr(filePath.length-4) === 'jpeg' ) {
+  	   	      previewImage(event);
+  	   	    } else {
+  	   	      alert("이미지 파일만 올릴 수 있습니다");
+  	          location.reload(); // 페이지 다시 로드
+  	       	 //$('input[type=file]').val(''); // 파일 선택 초기화
+  	   	    }
+  	   	  });
+  	 });
+  	
+   //취소 눌렸을 때 등록되어있는 이미지도 초기화 
+   //(이 함수가 없으면, 파일을 등록한 후에 등록 옆의 취소 버튼을 눌려도 이미지가 그대로 남아있음)
+  	function resetImagePreview() {
+  	  for (var idx = 1; idx <= 2; idx++) {
+  	    var container = document.getElementById("image-preview-container-"+ idx);
+  	    var img = container.getElementsByTagName("img")[0];
+  	    if (img) {
+  	      container.removeChild(img);
+  	    }
+  	    var input = document.querySelector("input[name='file" + idx + "']");
+  	    input.value = "";
+  	  }
+  	}
+   
+  	var titleInput = document.querySelector('input[name="title"]');
+    var titleError = document.querySelector('div[data-field="title"]');
+    if (titleError) {
+      titleInput.classList.add('error');
+      titleError.classList.add('error');
+    }
+   
+   </script>
+	
     
 </head>
 <body>
@@ -65,12 +107,26 @@
   <h1>[ 게시판 - 글쓰기 ]</h1>
   <p>
   <form action="write" method="post" enctype="multipart/form-data" th:object="${writeForm}">
+  
     <table>
+      <tr>
+      	<th>리뷰 장소</th>
+		<td>
+			  <input type="text" list="searchOptions" th:field="*{review_place}"/>
+			  <datalist id="searchOptions">
+			    <option th:each="main_title : ${findAllName}" >
+			      <span th:text="${main_title}"></span>
+			    </option>
+			  </datalist>
+			   <div class="error" th:if="${#fields.hasErrors('review_place')}" th:errors="*{review_place}"></div>
+    			<div class="error" th:if="${placeError != null}" th:text="${placeError}"></div>
+    			
+		</td>
       <tr>
         <th>제목</th>
         <td>
           <input type="text" th:field="*{title}">
-          <div class="error" th:errors="*{title}"></div>
+  		  <div class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
         </td>
       </tr>
       <tr>
@@ -80,28 +136,22 @@
           <div class="error" th:errors="*{contents}"></div>
         </td>
       </tr>
-      <tr>
-        <th>첨부파일1</th>
-        <td>
-  			<input id="file1" type="file" name="file" accept="image/*" onchange="previewImage(event)">
- 			 <div id="image-preview-container"></div> 
-  	  </td>
-        
-      </tr>
-      <tr>
-        <th>첨부파일2</th>
-        <td>
-          <input type="file" name="file2">
-        </td>
-        
-      </tr>
+      
+       <tr th:if="${idx < 2}" th:each="idx : ${#numbers.sequence(0,1)}">
+		  <th th:text="'첨부파일' + ${idx+1}"></th>
+		  <td>
+		    <input class="file" type="file" th:name="'file'+${idx+1}" accept=".jpg, .png, .gif, .jpeg"
+			th:onchange="'previewImage(event, ' + (${idx + 1}) + ')'">
+		    <div th:id="'image-preview-container-'+${idx+1}" ></div>
+		  </td>
+	 </tr>
       
     </table>
     <p>
     <div class="center">
       <input type="button" onclick="location.href='/review/list'" value="목록으로">
       <input type="submit" value="등록하기">
-      <input type="reset" value="취소">
+      <input type="reset" value="취소"  onclick="resetImagePreview()">
     </div>
   </form>
 </div>

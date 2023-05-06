@@ -55,4 +55,5 @@ public interface TouristSpotMapper {
 		
 		void addHit(Tourist_Spot tourist_Spot);
 		
+
 }

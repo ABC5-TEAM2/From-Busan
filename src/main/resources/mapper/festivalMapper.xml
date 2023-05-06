@@ -38,9 +38,7 @@
         select count(*) from festival 
     </select>
     
-    <select id="findAllFestivalName" resultType="festival">
-        select MAIN_TITLE from festival 
-    </select>
+    
     
      <!-- ///////////////////////////////////////////////////////////////////////////////// -->
     

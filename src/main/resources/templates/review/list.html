@@ -30,6 +30,7 @@
   <table>
     <tr>
       <th>No</th>
+      <th>리뷰 장소</th>
       <th>제목</th>
       <th>작성자</th>
       <th>조회수</th>
@@ -37,6 +38,7 @@
     </tr>
     <tr th:each="review, reviewStat: ${revies}">
       <td th:text="${reviewStat.count}" class="center"></td>
+      <td th:text="${review.review_place}" class="center"></td>
       <td class="center"><a th:text="${review.title}" th:href="@{/review/read(review_id=${review.review_id})}"></a></td>
       <td th:text="${review.member_id}" class="center"></td>
       <td th:text="${review.hit}" class="center"></td>

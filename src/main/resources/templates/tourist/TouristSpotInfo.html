@@ -184,7 +184,7 @@ function calcRouteByBus(lat,lng) {
 /////////////// 맛집 정보 조건부로 가져오기/////////////////////////////////////////////////////////////////////////
 
 function getRestaurant(){
-		let gugun_nm = [[${tourist_Spot.gugun_nm}]];
+	let gugun_nm = [[${tourist_Spot.gugun_nm}]];
     $.ajax({
       url: "/restaurant/",
       type: "post",
@@ -205,14 +205,12 @@ function getRestaurant(){
 /////////////// 맛집 정보 지도에 표시하기/////////////////////////////////////////////////////////////////////////
 
 function findRestaurant(data1){
-		let lat = [[${tourist_Spot.lat}]];
+	let lat = [[${tourist_Spot.lat}]];
     let lng = [[${tourist_Spot.lng}]];
-		const main_title = [[${tourist_Spot.main_title}]];
-		const itemcntnts= [[${#strings.abbreviate(tourist_Spot.itemcntnts,80)}]];
+	const main_title = [[${tourist_Spot.main_title}]];
+	const itemcntnts= [[${#strings.abbreviate(tourist_Spot.itemcntnts,80)}]];
     const img_date = [[${tourist_Spot.main_img_normal}]]
  	 
- 	
-    const positions= new google.maps.LatLng(lat,lng);
     
     
     //로케이션 별로 마크 생성
@@ -291,7 +289,7 @@ const pos = new google.maps.LatLng(lat,lng);
     	    	
     	    	let main_title = item["main_title"];
 				 	    	 //로케이션 별로 마크 생성
-			            marker = new google.maps.Marker({
+	            marker = new google.maps.Marker({
 	                position: new google.maps.LatLng(lat,lng),
 	                map:map,
 	                animation: google.maps.Animation.DROP,
@@ -332,8 +330,8 @@ function calcRoute(lat,lng) {
 	navigator.geolocation.getCurrentPosition(
       (position) => {
      	 
-			let touristLat = [[${tourist_Spot.lat}]];
-			let touristLng = [[${tourist_Spot.lng}]];
+		let touristLat = [[${tourist_Spot.lat}]];
+		let touristLng = [[${tourist_Spot.lng}]];
         const mypos = new google.maps.LatLng(touristLat,touristLng);
         const arrivePos = new google.maps.LatLng(lat,lng);
 
@@ -350,6 +348,7 @@ function calcRoute(lat,lng) {
         //alert(status);  // 확인용 Alert..미사용시 삭제
          if (status === google.maps.DirectionsStatus.OK) {
        	  directionsDisplay.setDirections(response);
+       	  
        	  for (i = 0; i < response.routes.length; i++) {
        		  let route = response.routes[i];
        	        for (j = 0; j < route.legs.length; j++) {
@@ -415,7 +414,7 @@ function myList(touristSpotId) {
 	$.ajax({
 	url: "myList",
 	type: "POST",
-	data: { touristSpotId: touristSpotId },
+	data: { festival_id: festival_id },
 	success: function (result) {
 		        if (result.jjim===true) {
 		          alert("찜 목록에 추가되었습니다.");
@@ -500,7 +499,11 @@ function myList(touristSpotId) {
         }
       })
     }) */
-          
+    
+  //팝업창 띄우기 
+    function findTourist(homepage_url) {
+        window.open(homepage_url, 'Popup');
+    }          
   </script>
 </head>
 
@@ -574,8 +577,10 @@ function myList(touristSpotId) {
 						<td th:text="*{cntct_tel}"></td>
 					</tr>
 					<tr>
-						<td>홈페이지</td>
-						<td><a href="*{homepage_url}" th:text="*{homepage_url}"></a></td>
+						<th>관련 홈페이지</th>
+						<td><a href="#"
+							th:onclick="findTourist([[${tourist_Spot.homepage_url}]])"
+							th:text="${tourist_Spot.homepage_url}"></a></td>
 					</tr>
 					<tr>
 						<td>휴무일</td>

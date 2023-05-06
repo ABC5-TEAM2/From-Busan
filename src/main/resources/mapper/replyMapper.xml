@@ -6,7 +6,7 @@
     <!-- 리플 등록 -->
     <insert id="saveReply">
     	<selectKey keyProperty="reply_id" resultType="long" order="BEFORE">
-    		select seq_board.nextval from dual
+    		select seq_review.nextval from dual
     	</selectKey>
     	insert into reply (
     		reply_id,

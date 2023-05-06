@@ -12,12 +12,14 @@
             review_id,
             title,
             contents,
-            member_id
+            member_id,
+            review_place
         ) values (
             #{review_id},
             #{title},
             #{contents},
-            #{member_id}
+            #{member_id},
+            #{review_place}
         )
     </insert>
 	
@@ -118,5 +120,11 @@
     <select id="findReviewsByMemberId" resultType="review">
         select * from review where member_id = #{member_id}
     </select>
+    
+    
+	<select id="findAllMainTitle" resultType="String">
+	    SELECT main_title FROM tourist_Spot UNION SELECT main_title FROM festival
+	</select>
+
     
 </mapper>

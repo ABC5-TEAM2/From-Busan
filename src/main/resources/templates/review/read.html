@@ -6,8 +6,23 @@
     <link rel="stylesheet" href="/css/default.css">
     <link rel="stylesheet" href="/css/header.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/css/lightbox.min.css">
+   	<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+    
     <script src="/js/index.js"></script>
+    
     <script th:inline="javascript">
+    
+    lightbox.option({
+  	  resizeDuration: 200,
+  	  wrapAround: true,
+  	  disableScrolling: false,
+  	  fitImagesInViewport: false,
+  	  maxWidth:700,
+  	  maxHeight:700,
+  	   	 
+  	})
+    
       function writeReply() {
         let review_id = [[${review.review_id}]];
         let content = $("#reply").val();
@@ -146,6 +161,10 @@
 <div id="container">
   <h1>[ 게시판 - 글 읽기 ]</h1>
     <table th:object="${review}">
+    <tr>
+        <th>리뷰 장소</th>
+        <td th:text="*{review_place}"></td>
+      </tr>
       <tr>
         <th>제목</th>
         <td th:text="*{title}"></td>
@@ -168,11 +187,15 @@
       </tr>
       
       <tr th:each="file, fileStat: ${files}">
-        <th>첨부파일<a th:text="${fileStat.count}"></a></th>
-        <td >
-		<img th:src="@{/resources01/img/__${file.SAVED_FILENAME}__}" th:if="${file}" th:href="@{/review/download/{id}(review_id=${file.REVIEW_ID})}" th:text="${file.SAVED_FILENAME}" th:width="100" th:height="100" />
-        </td>
-      </tr>	
+        <th>첨부파일
+        	<a th:text="${fileStat.count}"></a>
+       	</th>
+        <th>
+        	<a th:if="${file}" th:href="@{/resources01/img/__${file.SAVED_FILENAME}__}" th:data-title="|${fileStat.count}번째 사진|"  data-lightbox="example-set">
+		 		<img th:src="@{/resources01/img/__${file.SAVED_FILENAME}__}" alt="" th:width="100" th:height="100" >
+		 	</a>
+		</th>
+      </tr>
       
     </table>
     <p>

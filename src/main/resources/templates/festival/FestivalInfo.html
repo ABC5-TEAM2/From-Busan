@@ -11,7 +11,16 @@
 	rel="stylesheet"
 	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
 	crossorigin="anonymous">
-
+	
+<link rel="stylesheet" href="/css/header.css" />
+<link rel="stylesheet" href="/css/Info.css" />
+<script src="/js/index.js"></script>
+<style type="text/css">
+.asd {
+	width: 400px;
+	height: 300px;
+}
+</style>
 <script th:inline="javascript">
 	
 	
@@ -31,9 +40,9 @@ function getDb(){
 	    let lat = [[${festival.lat}]];
 	    let lng = [[${festival.lng}]];
   
-   	    	const main_title = [[${festival.main_title}]];
-   	    	const itemcntnts= [[${festival.itemcntnts}]];
-   	    	
+    	const main_title = [[${festival.main_title}]];
+    	const itemcntnts= [[${#strings.abbreviate(festival.itemcntnts,100)}]];
+ 	    const img_date = [[${festival.main_img_normal}]]
    	    
    	    	 //로케이션 별로 마크 생성
             marker = new google.maps.Marker({
@@ -52,7 +61,7 @@ function getDb(){
                 (function(marker){
                     return function (){
                     	
-                        infowindow.setContent("<h3>"+main_title+"</h3>"+"<p>"+itemcntnts+"<p>"+positions+"<p>"
+                        infowindow.setContent("<h3>"+main_title+"</h3>"+"<p>"+positions+"<p>"
                         +"<button type='button' class='btn btn-outline-primary' onclick='calcRouteByRail(" +lat+","+lng + ")'>Rail로 도착</button> "
                         +"<button type='button' class='btn btn-outline-primary' onclick='calcRouteByBus(" +lat+","+lng + ")'>Bus로 도착</button> "+"<p>"
                         );
@@ -186,25 +195,25 @@ function calcRouteByBus(lat,lng) {
         alert(status+"  (버스가 없을경우 전철 경로가 나옵니다)");  // 확인용 Alert..미사용시 삭제
          if (status === google.maps.DirectionsStatus.OK) {
        	  directionsDisplay.setDirections(response);
-       	for (i = 0; i < response.routes.length; i++) {
-   		  let route = response.routes[i];
-   	        for (j = 0; j < route.legs.length; j++) {
-   	        	let leg = route.legs[j];
-   	            // Do something with leg attributes...
-   	            let instruction1 ='';
-   	            for (k = 0; k < leg.steps.length; k++) {
-   	            	let 	step = leg.steps[k];
-   	            	let distance = step.distance.text;    // fine
-   	            	let duration = step.duration.text;    // fine
-   	            	let instruction = step.instructions +" "+duration+",";   ////////////////////
-   	                instruction1 += instruction;
-   	                let mode = step.travel_mode;          // works
-   	            }
-   	            let result1 = instruction1.slice(0, -1);
-   	                console.log(result1); 
-   	            $("#mapContent").append(result1);
-   	        }        
-   	    }    
+       		for (i = 0; i < response.routes.length; i++) {
+	   		  let route = response.routes[i];
+	   	        for (j = 0; j < route.legs.length; j++) {
+	   	        	let leg = route.legs[j];
+	   	            // Do something with leg attributes...
+	   	            let instruction1 ='';
+	   	            for (k = 0; k < leg.steps.length; k++) {
+	   	            	let 	step = leg.steps[k];
+	   	            	let distance = step.distance.text;    // fine
+	   	            	let duration = step.duration.text;    // fine
+	   	            	let instruction = step.instructions +" "+duration+",";   ////////////////////
+	   	                instruction1 += instruction;
+	   	                let mode = step.travel_mode;          // works
+	   	            }
+	   	            let result1 = instruction1.slice(0, -1);
+	   	                console.log(result1); 
+	   	            $("#mapContent").append(result1);
+	   	        }        
+   	    }
       	  }else{
       		  return getDb()
       		  };
@@ -212,12 +221,7 @@ function calcRouteByBus(lat,lng) {
    	)
    })}
    
-/////////////// 맛집 상세 정보로 가기/////////////////////////////////////////////////////////////////////////
 
-function restaurantInfo(){
-	
-	
-}
 	
 /////////////// 맛집 정보 조건부로 가져오기/////////////////////////////////////////////////////////////////////////
 	
@@ -234,7 +238,7 @@ function getRestaurant(){
        	 })
        	 if(data1.length !== 0){
      	findRestaurant(data1);
-       	 }else{alert("주변 맛집이 없습니다..ㅜㅜ")};
+       	 }else{alert("주변 맛집이 없습니다")};
       },
       error: function (xhr, status, error) {
         console.log(status);
@@ -246,17 +250,55 @@ function getRestaurant(){
 /////////////// 맛집 정보 지도에 표시하기/////////////////////////////////////////////////////////////////////////
 
   function findRestaurant(data1){
-  	
-  	console.log(data1);
-  	let map= new google.maps.Map(document.getElementById("map"),{
-          zoom:14,
-          center : new google.maps.LatLng(35.11, 129.04),
-          mapTypeId: google.maps.MapTypeId.ROADMAP,
-     	});
-  
+	let lat = [[${festival.lat}]];
+    let lng = [[${festival.lng}]];
+	const main_title = [[${festival.main_title}]];
+	const itemcntnts= [[${#strings.abbreviate(festival.itemcntnts,80)}]];
+    const img_date = [[${festival.main_img_normal}]]
+
+    
+    
    const infowindow = new google.maps.InfoWindow();
    let i,res;
    let marker;
+   let marker2;
+   //icons
+   const icons ={
+  			restaurant:'/image/restaurant.png',
+  			attraction:'/image/attraction.png',
+  			festival:'.image/concert.png'
+  	}
+   
+	let map= new google.maps.Map(document.getElementById("map"),{
+        zoom:14,
+        center : new google.maps.LatLng(lat, lng),
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+   	});
+   
+   const pos = new google.maps.LatLng(lat,lng);
+
+   marker2 = new google.maps.Marker({
+       position: pos,
+       map:map,
+       icon:icons.attraction
+   });
+
+	google.maps.event.addListener(
+        marker2,
+        "click",
+        (function(marker2){
+            return function (){
+         	   	infowindow.setContent("<img src="+img_date+" class='asd'>"+"<h1>"+main_title+"</h1>"+"<p>"+itemcntnts);
+               infowindow.open(map,marker2);
+                if (marker.getAnimation() !== null) {
+                    marker.setAnimation(null);
+                  } else {
+                    marker.setAnimation(google.maps.Animation.BOUNCE);
+                  }
+            };
+            })(marker2,pos)
+    	);
+   
    
   	for(i=0; i<data1.length;i++){
    	res = data1.find((item,index)=>{
@@ -265,10 +307,10 @@ function getRestaurant(){
    		 	let lng=[];
    	    	lat +=item["lat"]; 
    	    	lng +=item["lng"];	
+ 	    	let restaurant_id=[];
+   	    	 restaurant_id +=item["restaurant_id"];
    	    	
-   	    	let restaurant_id =item["restaurant_id"];
    	    	let mainImgNormal =item["main_img_normal"];
-   	    	
    	    	let rprsntv_menu =item["rprsntv_menu"];
    	    	let cntct_tel =item["cntct_tel"];
    	    	let addr1 =item["addr1"];
@@ -279,6 +321,7 @@ function getRestaurant(){
                 position: new google.maps.LatLng(lat,lng),
                 map:map,
                 animation: google.maps.Animation.DROP,
+              	icon: icons.restaurant,
               	//icon: 'your-icon.png'
             });
             const positions= new google.maps.LatLng(lat,lng);
@@ -289,9 +332,9 @@ function getRestaurant(){
                 (function(marker){
                     return function (){
                     	 infowindow.setContent("<h3>"+main_title+"</h3>"
-  	                        +"<img src='"+mainImgNormal+"' alt='restaurant image' style='width: 300px; height: 300px;'><br>"
+  	                        +"<img src='"+mainImgNormal+"' alt='restaurant image' style='width: 300px; height: 200px;'><br>"
   	                        +"<p>"+"<h5> 대표메뉴 : "+rprsntv_menu+"</h5>"+"<p>"+"<h5> 대표 전화번호 : "+cntct_tel+"</h5>"+"<p>"+"<h5> 주소 : "+addr1+"</h5>"+"<p>"+"<p>"
-  	                        +"<button type='button' class='btn btn-outline-primary' onclick=\"location.href='/restaurant/RestaurantInfo?restaurant_id=" + restaurant_id + "'\">레스토랑 정보</button>"
+  	                        /*+"<button type='button' class='btn btn-outline-primary' onclick=\"location.href='/restaurant/RestaurantInfo?restaurant_id=" + restaurant_id + "'\">레스토랑 정보</button>"*/
   	                        +"<button type='button' class='btn btn-outline-primary' onclick='calcRoute(" +lat+","+lng + ")'>명소에서 최단 거리 찾기</button> "
   	                        );
                         infowindow.open(map,marker);
@@ -312,144 +355,244 @@ function getRestaurant(){
 /////////////// 최단경로 길찾기/////////////////////////////////////////////////////////////////////////
 
   function calcRoute(lat,lng) {
-  	
-  	navigator.geolocation.getCurrentPosition(
+
+    navigator.geolocation.getCurrentPosition(
         (position) => {
-        	let festivalLat = [[${festival.lat}]];
-    	    let festivalLng = [[${festival.lng}]];
-    	    console.log(festivalLng);
-          const mypos = new google.maps.LatLng(festivalLat,festivalLng);
-          const arrivePos = new google.maps.LatLng(lat,lng);
+        	
+            let festivalLat = [[${festival.lat}]];
+            let festivalLng = [[${festival.lng}]];
+            let mypos = new google.maps.LatLng(festivalLat,festivalLng);
+            let arrivePos = new google.maps.LatLng(lat,lng);
 
-        var request = {
-            origin:mypos,
-            destination:arrivePos,
-            travelMode: "TRANSIT",
-            }
-        let directionsService = new google.maps.DirectionsService();
-        let directionsDisplay = new google.maps.DirectionsRenderer();
-        maps = new google.maps.Map(document.getElementById('map'), map);
-        directionsDisplay.setMap(maps);
-        directionsService.route(request, function(response, status) {
-          alert(status);  // 확인용 Alert..미사용시 삭제
-           if (status === google.maps.DirectionsStatus.OK) {
-         	  directionsDisplay.setDirections(response);
-         	 for (i = 0; i < response.routes.length; i++) {
-         		  let route = response.routes[i];
-         	        for (j = 0; j < route.legs.length; j++) {
-         	        	let leg = route.legs[j];
-         	            // Do something with leg attributes...
-         	            let instruction1 ='';
-         	            for (k = 0; k < leg.steps.length; k++) {
-         	            	let 	step = leg.steps[k];
-         	            	let distance = step.distance.text;    // fine
-         	            	let duration = step.duration.text;    // fine
-         	            	let instruction = step.instructions +" "+duration+",";   ////////////////////
-         	                instruction1 += instruction;
-         	                let mode = step.travel_mode;          // works
-         	            }
-         	            let result1 = instruction1.slice(0, -1);
-         	                console.log(result1); 
-         	            $("#mapContent").append(result1);
-         	        }        
-         	    }
-        }else{
-     		return getDb()
-    	 };
-     }
-    )
-   })}	
+            var request = {
+                origin:mypos,
+                destination:arrivePos,
+                travelMode: "TRANSIT",
+            	}
+            let directionsService = new google.maps.DirectionsService();
+            let directionsDisplay = new google.maps.DirectionsRenderer();
+            let maps = new google.maps.Map(document.getElementById('map'), map);
+            directionsDisplay.setMap(maps);
+            directionsService.route(request, function(response, status) {
+                alert(status);  // 확인용 Alert..미사용시 삭제
+                if (status === google.maps.DirectionsStatus.OK) {
+                    directionsDisplay.setDirections(response);
 
-
+                    for (i = 0; i < response.routes.length; i++) {
+                        let route = response.routes[i];
+                        for (j = 0; j < route.legs.length; j++) {
+                            let leg = route.legs[j];
+                            // Do something with leg attributes...
+                            let instruction1 ='';
+                            for (k = 0; k < leg.steps.length; k++) {
+                                let step = leg.steps[k];
+                                let distance = step.distance.text;    // fine
+                                let duration = step.duration.text;    // fine
+                                let instruction = step.instructions +" "+duration+",";   ////////////////////
+                                instruction1 += instruction;
+                                let mode = step.travel_mode;          // works
+                            }
+                            let result1 = instruction1.slice(0, -1);
+                            	console.log(result1); 
+                            $("#mapContent").append(result1);
+                        }        
+                    }
+                } else {
+                return getDb();
+          	 };
+         }
+        )
+       })}	
 
 /////////////// 좋아요/////////////////////////////////////////////////////////////////////////
 
 function like(festivalId) {
 	console.log(festivalId);
 	
-	$.ajax({
-	url: "like",
-	type: "POST",
+ 	$.ajax({
+ 	url: "like",
+ 	type: "POST",
 	data: { festivalId: festivalId },
-	success: function (result) {
-		        if (result.liked===true) {
-		          alert("좋아요가 추가되었습니다.");
-		          document.getElementById("like-btn").classList.remove("btn-danger");
-		          document.getElementById("like-btn").classList.add("btn-success");
-		          document.getElementById("like-btn").value = "좋아요 취소";
-		        } else {
-		          alert("좋아요가 삭제되었습니다.");
-		          document.getElementById("like-btn").classList.remove("btn-success");
-		          document.getElementById("like-btn").classList.add("btn-danger");
-		          document.getElementById("like-btn").value = "좋아요";
-		        }
-		    },
-		error: function (xhr, status, error) {
-		console.error(error);
-	}	
-});
+ 	success: function (result) {
+ 		        if (result.liked===true) {
+ 		          alert("좋아요가 추가되었습니다.");
+	 		         $(".like_img").attr({
+	 		            'src': 'https://cdn-icons-png.flaticon.com/512/803/803087.png',
+	 		            alt: '좋아요삭제'
+	 		          });	
+ 		        } else {
+ 		          alert("좋아요가 삭제되었습니다.");
+ 		         		$(".like_img").attr({
+	 		            'src': '/image/heart-regular.svg',
+	 		            alt: '좋아요삭제'
+	 		          });	
+ 		        }
+ 		    },
+ 		error: function (xhr, status, error) {
+ 		console.error(error);
+ 	}		
+ });
 }  
       
 /////////////// 찜 기능 /////////////////////////////////////////////////////////////////////////
 function myList(festival_id) {
 	console.log(festival_id);
+	
 	$.ajax({
 	url: "myList",
 	type: "POST",
 	data: { festival_id: festival_id },
 	success: function (result) {
-	        if (result.jjim===true) {
-	          alert("찜 목록에 추가되었습니다.");
-	          document.getElementById("myList-btn").classList.remove("btn-primary");
-	          document.getElementById("myList-btn").classList.add("btn-warning");
-	          document.getElementById("myList-btn").value = "찜하기 취소";
-	        } else {
-	          alert("찜 목록에서 삭제되었습니다.");
-	          document.getElementById("myList-btn").classList.remove("btn-warning");
-	          document.getElementById("myList-btn").classList.add("btn-primary");
-	          document.getElementById("myList-btn").value = "찜하기";
-	        }
-	    },
+		        if (result.jjim===true) {
+		          alert("찜 목록에 추가되었습니다.");
+		          $(".wish_img").attr({
+	 		            'src': '/image/bookmark-solid%20(2).svg',
+	 		            alt: '찜하기'
+	 		          });	
+		        } else {
+		          alert("찜 목록에서 삭제되었습니다.");
+		          $(".wish_img").attr({
+	 		            'src': '/image/bookmark-regular (1).svg',
+	 		            alt: '찜삭제'
+	 		          });	
+		          }
+		    },
 	error: function (xhr, status, error) {
 	console.error(error);
 	}
 	});
-}         
-
+}
 	
 </script>
 
+
+<script>
+		
+    $(function () {
+      $("#spot-header-container > div").hide();
+      $('.tabnav a').click(function () {
+        $('#spot-header-container > div').hide().filter(this.hash).fadeIn();
+        $('.tabnav a').removeClass('active');
+        $(this).addClass('active');
+        return false;
+      }).filter(':eq(0)').click();
+    });
+
+
+    
+    //좋아요 버튼
+    $(function like() {
+      var $likeBtn = $('.icon.heart');
+
+      $likeBtn.click(function () {
+        $likeBtn.toggleClass('active');
+				//active가 잇으면
+        if ($likeBtn.hasClass('active')) {
+         		 $(this).find('img').attr({
+            'src': 'https://cdn-icons-png.flaticon.com/512/803/803087.png',
+            alt: '좋아요하기 완료'
+          });
+
+
+        } 
+        //active가 없는경우
+        else {
+          $(this).find('i').removeClass('fas').addClass('far')
+          $(this).find('img').attr({
+            'src': '/image/heart-regular.svg',
+            alt: "좋아요하기"
+          })
+        }
+      })
+    });
+
+    //찜하기 버튼
+    /* $(function wish(){
+      var $wishBtn = $('.icon.wish');
+
+      $wishBtn.click(function () {
+        $wishBtn.toggleClass('active');
+				
+        if ($wishBtn.hasClass('active')) {
+          $(this).find('img').attr({
+            'src': '/image/bookmark-solid%20(2).svg',
+            alt: '찜하기 완료'
+          });
+
+        } else {
+          $(this).find('i').removeClass('fas').addClass('far')
+          $(this).find('img').attr({
+            'src': '/image/bookmark-regular%20(1).svg',
+            alt: "찜하기"
+          })
+        }
+      })
+    }) */
+          
+    
+    
+	//팝업창 띄우기 
+	function findFestival(homepage_url) {
+	    window.open(homepage_url, 'Popup');
+	}
+
+  </script>
+
+
+
+
 </head>
 <body>
+	<div th:replace="fragments/header :: header"></div>
 	<div id="container" th:object="${festival}">
+		
+		<nav class="tabnav">
+			<a class="item" href="#itemcntnts">상세 정보</a> <a class="item"
+				href="#information">이용 정보</a> <a class="item" href="#mapContainer"
+				onclick="getRestaurant()">주변 맛집 지도</a>
+		</nav>
+		
+			<div id="spot-header-container">
+			<div class="itemcntnts" id="itemcntnts">
 
-		<div class="btn-group" role="group"
-			aria-label="Basic mixed styles example">
-			
-			<a th:unless="${#lists.contains(findFestivalLikes, member_id)}">
-				<input type="button" class="btn btn-danger"
-				th:onclick="|like(*{festival_id})|" value="좋아요" id="like-btn"> 
-			</a>
-			<a th:if="${#lists.contains(findFestivalLikes, member_id)}">
-			<input type="button" class="btn btn-success"
-				th:onclick="|like(*{festival_id})|" value="좋아요 취소" id="like-btn"> 
-			</a>
-			
-			
-			<a th:unless="${#lists.contains(findFestivalMyList, member_id)}">
-				<input type="button" class="btn btn-primary" th:onclick="|myList(*{festival_id})|" value="찜하기" id="myList-btn"> 
-			</a>
-			<a th:if="${#lists.contains(findFestivalMyList, member_id)}">
-				<input type="button" class="btn btn-warning" th:onclick="|myList(*{festival_id})|" value="찜하기 취소" id="myList-btn"> 
-			</a>
-			
-			
+				<img th:src="*{main_img_normal}" th:alt="*{main_title}">
+
+				<div class="heartWish">
+					<div class="left_area">
+						<a th:unless="${#lists.contains(findFestivalLikes, member_id)}"
+							href="javascript:;" class="icon heart"
+							th:onclick="|like(*{festival_id})|"> <img
+							class="like_img" src="/image/heart-regular.svg" alt="하트">
+						</a>
+						<!--좋아요를 햇으면  -->
+						<a th:if="${#lists.contains(findFestivalLikes, member_id)}"
+							href="javascript:;" class="icon heart"
+							th:onclick="|like(*{festival_id})|"> <img
+							class="like_img"
+							src="https://cdn-icons-png.flaticon.com/512/803/803087.png"
+							alt="하트">
+						</a>
+					</div>
+					<div class="right_area">
+						<a th:unless="${#lists.contains(findFestivalMyList, member_id)}"
+							href="javascript:;" class="icon wish"
+							th:onclick="|myList(*{festival_id})|"> <img
+							class="wish_img" src="/image/bookmark-regular%20(1).svg"
+							alt="찜하기">
+						</a>
+						<!--찜을 햇으면  -->
+						<a th:if="${#lists.contains(findFestivalMyList, member_id)}"
+							href="javascript:;" class="icon wish"
+							th:onclick="|myList(*{festival_id})|"> <img
+							class="wish_img" src="/image/bookmark-solid%20(2).svg" alt="찜하기">
+						</a>
+					</div>
+				</div>
 					
+
 			<input type="button" class="btn btn-info"
 				onclick="location.href='/member/jjimList'" value="나의 찜 목록">
 			 
-
-			
 			 	
 			 <input
 			type="button" class="btn btn-success"
@@ -460,22 +603,21 @@ function myList(festival_id) {
 			
 			<a class="btn btn-warning" th:utext="'조회수 : '+*{hit}"></a>
 			
-		</div>
+			
+			
 
 		<p>
-		<table >
-				<tr>
-				<th>제목</th>
-				<th th:text="*{main_title}"></th>
-			</tr>
-			<tr>
-				<th>내용</th>
-				<td th:utext="*{itemcntnts}"></td>
-			</tr>
-			<tr>
-				<th>사진</th>
-				<td><img th:src="@{*{main_img_normal}}"></td>
-			</tr>
+		
+
+		<div class="explain">
+			<h3 th:text="*{itemcntnts}"></h3>
+		</div>
+	</div>
+		
+		
+		
+	<div class="information" id="information">
+		<table  class="information-table" border="1px solid black">
 			<tr>
 				<th>주소</th>
 				<td th:utext="*{addr1}"></td>
@@ -486,7 +628,10 @@ function myList(festival_id) {
 			</tr>
 			<tr>
 				<th>관련 홈페이지</th>
-				<td th:utext="*{homepage_url}"></td>
+				<td>
+				  <a href="#" th:onclick="findFestival([[${festival.homepage_url}]])"
+				     th:text="${festival.homepage_url}"></a>
+				</td>
 			</tr>
 			<tr>
 				<th>최단 교통정보</th>
@@ -502,31 +647,32 @@ function myList(festival_id) {
 				<th>???</th>
 				<td th:utext="*{middle_size_rm1}"></td>
 			</tr>
-			<tr>
-				<th>좋아요 갯수</th>
-				<td th:utext="*{place_like}"></td>
-			</tr>
+			
 		</table>
 
 	</div>
 	
-	 <input type="button" class="btn btn-dark" 
-					   onclick="getRestaurant()" 
-					    value="맛집 찾기"> 
-			 
- 			 <input type="button" class="btn btn-warning" 
-					   onclick="getDb()" 
-					    value="명소 찾기"> 
-    <p>
-	
-	<div id="mapContainer">
-		<div id="map"></div>
-		<div id="mapContent"></div>
+		<div id="mapContainer">
+			<div id="map"></div>
+			<div id="mapContent"></div>
+			
+			
+		     	
+		</div>
+		
+		<script async
+			src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_FL3IrY7I_w7Cerf1pK28nSvyxby86Xg&callback=getRestaurant&v=weekly">
+	     </script>
+	     
+		<input type="button" class="btn btn-dark" 
+			   onclick="getRestaurant()" 
+			    value="맛집 찾기"> 
+	 
+		 <input type="button" class="btn btn-warning" 
+			   onclick="getDb()" 
+			    value="명소 찾기"> 
 	</div>
-	<script async defer
-		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_FL3IrY7I_w7Cerf1pK28nSvyxby86Xg&callback=getDb">
-     </script>
-
+</div>
 
 </body>
 </html>

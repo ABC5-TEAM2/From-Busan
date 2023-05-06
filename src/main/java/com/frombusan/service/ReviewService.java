@@ -28,12 +28,13 @@ public class ReviewService {
     @Value("${file.upload.path}")
     private String uploadPath;
 
-    public void saveReview(Review review, MultipartFile file,MultipartFile file2) {
-
+    public void saveReview(Review review, MultipartFile file1,MultipartFile file2) {
+    	
+    	
     	reviewMapper.saveReview(review);
         // 파일을 저장한다.
-        if (file != null && file.getSize() > 0) {
-        	AttachedImg attachedImg = fileService.saveFile(file);
+        if (file1 != null && file1.getSize() > 0) {
+        	AttachedImg attachedImg = fileService.saveFile(file1);
         	attachedImg.setReview_id(review.getReview_id());
             reviewMapper.saveImg(attachedImg);
         }
@@ -136,4 +137,8 @@ public class ReviewService {
 	String result = review_place.substring(1, review_place.length() - 1);
     return reviewMapper.findReviewsByMainTitle(result);
     }
+    
+    public List<String> findAllMainTitle() {
+        return reviewMapper.findAllMainTitle();
+        }
 }

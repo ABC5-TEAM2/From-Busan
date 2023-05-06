@@ -20,5 +20,7 @@ public class ReviewUpdateForm {
     private Long review_like;
     private LocalDateTime created_time;
     private boolean isFileRemoved;
+    private String review_place;
+
 }
 

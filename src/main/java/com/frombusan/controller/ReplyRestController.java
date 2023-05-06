@@ -31,12 +31,12 @@ public class ReplyRestController {
 	private final ReplyMapper replyMapper;
 	
 	// 리플 등록
-	@PostMapping("{board_id}")
-	public ResponseEntity<String> writeReply(@PathVariable Long board_id,
+	@PostMapping("{review_id}")
+	public ResponseEntity<String> writeReply(@PathVariable Long review_id,
 											 @ModelAttribute Reply reply,
 											 @SessionAttribute("loginMember") Member loginMember) {
 		log.info("reply: {}", reply);
-		reply.setBoard_id(board_id);
+		reply.setReview_id(review_id);
 		reply.setMember_id(loginMember.getMember_id());
 		
 		replyMapper.saveReply(reply);
@@ -45,18 +45,18 @@ public class ReplyRestController {
 	}
 	
 	// 리플 읽기 (/reply/게시물아이디/리플아이디)
-	@GetMapping("{board_id}/{reply_id}")
-	public ResponseEntity<Reply> findReply(@PathVariable Long board_id,
+	@GetMapping("{review_id}/{reply_id}")
+	public ResponseEntity<Reply> findReply(@PathVariable Long review_id,
 										   @PathVariable Long reply_id) {
 		Reply reply = null;
 		return ResponseEntity.ok(reply);
 	}
 	
 	// 리플 목록
-	@GetMapping("{board_id}")
+	@GetMapping("{review_id}")
 	public ResponseEntity<List<ReplyDto>> findReplies(@SessionAttribute("loginMember") Member loginMember,
-												   	  @PathVariable Long board_id) {
-		List<Reply> replies = replyMapper.findReplies(board_id);
+												   	  @PathVariable Long review_id) {
+		List<Reply> replies = replyMapper.findReplies(review_id);
 		List<ReplyDto> replyDtos = new ArrayList<>();
         if (replies != null && replies.size() > 0) {
             for (Reply reply : replies) {
@@ -72,9 +72,8 @@ public class ReplyRestController {
 	}
 	
 	// 리플 수정
-	@PutMapping("{board_id}/{reply_id}")
+	@PutMapping("{review_id}/{reply_id}")
 	public ResponseEntity<Reply> updateReply(@SessionAttribute("loginMember") Member loginMember,
-											 @PathVariable Long board_id,
 											 @PathVariable Long reply_id,
 											 @ModelAttribute Reply reply) {
 		
@@ -88,9 +87,8 @@ public class ReplyRestController {
 	}
 	
 	// 리플 삭제
-	@DeleteMapping("{board_id}/{reply_id}")
+	@DeleteMapping("{review_id}/{reply_id}")
 	public ResponseEntity<String> removeReply(@SessionAttribute("loginMember") Member loginMember,
-											  @PathVariable Long board_id,
 											  @PathVariable Long reply_id) {
 		 // 삭제 권한 확인
         Reply findReply = replyMapper.findReply(reply_id);

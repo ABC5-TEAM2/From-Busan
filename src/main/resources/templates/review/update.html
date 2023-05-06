@@ -47,6 +47,15 @@
   <h1>[ 게시판 - 글수정 ]</h1>
   <form th:action="@{/review/update(review_id=${review.review_id})}" th:object="${review}" method="post" enctype="multipart/form-data">
     <table>
+    
+ 	 <tr>
+        <th>리뷰 장소</th>
+        <td>
+            <span th:text="*{review_place}">
+            <div class="error" th:errors="*{title}"></div>
+        </td>
+      </tr>
+
       <tr>
         <th>제목</th>
         <td>

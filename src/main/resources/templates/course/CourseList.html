@@ -3,70 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <title>게시판 리스트</title>
-<link rel="stylesheet" href="/css/LeeTest.css">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-
-<style type="text/css">
-#maps-container {
-	width: 500px;
-	height: 500px;
-}
-
-#map {
-	width: 300px;
-	height: 300px;
-}
-</style>
-
-
-<script th:inline="javascript">
-
-	//팝업창 띄우기 
-	function findFestival(festival_id) {
-	    console.log(festival_id);
-		//window.open(`RestaurantInfo?restaurant_id=${restaurant_id}`, 'Popup', 'width=1000,height=1000');
-	}
-
-	//th:onclick="|deleteImg('${file.IMG_ID}', ${fileStat.index})|"
-	//th:onclick="|findRestaurant('${file.IMG_ID}'})|"
-</script>
+<link rel="stylesheet" href="/css/header.css" />
+<link rel="stylesheet" href="/css/list.css">
+<script src="/js/index.js"></script>
 
 </head>
 <body>
-	<div id="container">
-		<h1>[ 여행 코스 리스트 ]</h1>
+	<div th:replace="fragments/header :: header"></div>
+	
+	<div id="card-container">
+	
+		<div class="container">
 
-
-		<div class="row">
-			<div class="col-md-4 mb-4"
-				th:each="course, courseStat: ${findAllCourse}">
-				<a href="#" class="tourlist-spot-images-container"
-					th:data-course="${course}"> <img
-					th:src="@{${course.main_img}}" alt="임시이미지4"
-					class="tourlist-spot-images"
-					th:onclick="|location.href='/course/CourseInfo?course_id=${course.course_id}'|">
-			<!-- 	th:onclick="|findRestaurant('${restaurant.restaurant_id}')|"> -->
-					<div class="tourlist-spot-images-place">
-						<h3 class="tourlist-spot-images-place"
-							th:text="${course.course_title}"></h3>
-					</div>
-				</a>
-				<a>
-					<a class="btn btn-danger" th:utext="'좋아요 수 : '+${course.place_like}"></a>
-					<a class="btn btn-warning" th:utext="'조회수 : '+${course.hit}"></a>
-				</a>
+			<div class="card" style="--clr: #009688;"
+				th:each="course :${findAllCourse}">
+				<div class="imgBx">
+					<!--이미지-->
+					<img th:src="@{${course.main_img}}">
+				</div>
+				<div class="content">
+					<h2 th:text="${course.course_title}"></h2>
+					<p th:text="${#strings.abbreviate(course.course_sequense,70)}"></p>
+					<a th:href="@{/course/CourseInfo(course_id=${course.course_id})}">상세보기</a> 
+					<p>
+					<a th:utext="'좋아요 수 : '+${course.place_like}"></a> <a
+						th:utext="'조회수 : '+${course.hit}"></a>
+				</div>
 			</div>
 		</div>
 	</div>
-
 </body>
 </html>
