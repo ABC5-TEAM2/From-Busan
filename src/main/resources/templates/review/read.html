@@ -191,8 +191,8 @@
         	<a th:text="${fileStat.count}"></a>
        	</th>
         <th>
-        	<a th:if="${file}" th:href="@{/resources01/img/__${file.SAVED_FILENAME}__}" th:data-title="|${fileStat.count}번째 사진|"  data-lightbox="example-set">
-		 		<img th:src="@{/resources01/img/__${file.SAVED_FILENAME}__}" alt="" th:width="100" th:height="100" >
+        	<a th:if="${file}" th:href="@{/image/__${file.SAVED_FILENAME}__}" th:data-title="|${fileStat.count}번째 사진|"  data-lightbox="example-set">
+		 		<img th:src="@{/image/__${file.SAVED_FILENAME}__}" alt="" th:width="100" th:height="100" >
 		 	</a>
 		</th>
       </tr>

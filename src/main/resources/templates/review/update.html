@@ -87,7 +87,7 @@
 		  <th>첨부파일<a th:text="${fileStat.count}"></a></th>
 		  <td>
 		    <div th:id="'attachedImg-' + ${fileStat.index}" th:if="${file}">
-			<img th:src="@{/resources01/img/__${file.SAVED_FILENAME}__}" th:if="${file}" th:href="@{/review/download/{id}(review_id=${file.REVIEW_ID})}"  th:width="100" th:height="100" />
+			<img th:src="@{/image/__${file.SAVED_FILENAME}__}" th:if="${file}" th:href="@{/review/download/{id}(review_id=${file.REVIEW_ID})}"  th:width="100" th:height="100" />
 		      <input type="button" th:onclick="|deleteImg('${file.IMG_ID}', ${fileStat.index})|" value="삭제">
 		    </div>
 		    <input type="file" name="file">

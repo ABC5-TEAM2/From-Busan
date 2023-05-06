@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- CommonsMultipartResolver 클래스를 multipartResolver 빈으로 설정 -->
+
+
+	<beans:bean id="multipartResolver"
+				class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="maxUploadSize" value="52428800" />
+		<beans:property name="maxInMemorySize" value="1000000" />
+		<beans:property name="defaultEncoding" value="utf-8"/>
+		
+	</beans:bean>
+	
+	<resources mapping="**/resources/**" location="/resources/" />
+	<resources mapping="**/resources01/**" location="/resources01/" />
+	<resources mapping="**/image/**" location="/image/" />
+	
+	
+	
