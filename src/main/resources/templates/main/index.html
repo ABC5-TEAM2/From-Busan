@@ -9,14 +9,15 @@
 <link rel="stylesheet" href="/css/header.css" />
 <link rel="stylesheet" href="/css/index.css" />
 
-<script src="/js/index.js" ></script>
-
-<script th:inline="javascript" >
+<script src="/js/index.js"></script>
+<script
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_FL3IrY7I_w7Cerf1pK28nSvyxby86Xg&callback=initialize"></script>
+<script th:inline="javascript">
 
 function calcRoute() {
     var start = document.getElementById('start').value;
     var end = document.getElementById('end').value;
-    var mode = "TRANSIT";
+    var mode = document.getElementById('mode').value;
 		
     var request = {
         origin:start,
@@ -47,7 +48,7 @@ function calcRoute() {
     	            }
     	            let result1 = instruction1.slice(0, -1);
     	                console.log(result1); 
-    	            $("#mapContent").append(result1);
+    	            $("#popup").append(result1);
     	        }        
     	    }
       }
@@ -90,32 +91,31 @@ google.maps.event.addDomListener(window, 'load', initialize);
 			src="https://www.busan.go.kr/humanframe/theme/busan22/assets/video/main_v2.mp4"
 			type="video/mp4" />
 	</video>
-	<div id="container">
 	
-		
-		<!-- 길찾기            완성햇는데, 밑에 명소*축제사진들이랑 위치 겹쳐지길래 지워둘게. 주석풀면 실행됨
-		<div id="panel" >
-            <b>Start: </b>
-            <input type="text" id="start" />
-            <b>End: </b>
-            <input type="text" id="end" />
-            <div>
-                <strong>Mode of Travel: </strong>
-                <select id="mode">
-                <option value="TRANSIT">Transit</option>
-                </select>
-                <input type="button" value="길찾기" onclick="calcRoute()" />
-            </div>
-        </div>
+	<div id="container">
 
-		<div id="map-container">
-			<div id="map"></div>
-			<div id="map-contents">
-				<div id="mapContent"></div>
+		<div id=panel-container>
+			<!-- 길찾기 -->
+			<div id="panel">
+				<h1>길찾기</h1>
+				<div class="panel-input">
+					<label for="start"> 출발지:  </label><input type="text" id="start" placeholder="Enter location" />
+				</div>
+				<div class="panel-input">
+					<label for="end"> 도착지:  </label><input type="text" id="end" placeholder="Enter location"	 />
+				</div>
+				<div class="panel-input">
+					<strong>Mode of Travel: </strong> 
+					<select id="mode">
+						<option value="TRANSIT">Transit</option>
+					</select> 
+					
+					<input type="button" value="길찾기" onclick="calcRoute()" />
+					<div id="popup"></div>
+				</div>
 			</div>
+			<div id="map"></div>
 		</div>
-		-->
-
 
 		<!--인기명소-->
 		<div id="tourist-spot-container">
@@ -138,8 +138,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 			<div class="inner" th:each="tour : ${tourist}">
 				<!-- card -->
-				<img th:alt="${tour.main_title}"
-					th:src="${tour.main_img_normal}">
+				<img th:alt="${tour.main_title}" th:src="${tour.main_img_normal}">
 				<div class="innerContent">
 					<a
 						th:href="@{/tourist/TouristInfo(tourist_Spot_id=${tour.tourist_Spot_id})}"
@@ -151,8 +150,8 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 			</div>
 		</div>
-		
-		
+
+
 
 
 
@@ -191,6 +190,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 			</div>
 		</div>
 	</div>
+	</div>
 	<script type="text/javascript">
 	
 	let page = 0; //현재 page
@@ -223,10 +223,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 		}
 	});
 	</script>
-	<!-- <script
-        async
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZDS2Huu1p2-ZjV4J6TzNyJikS9OCVqkw&callback=getRestaurant&v=weekly"
-        ></script> -->
+
 	<!-- <script
         async
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZDS2Huu1p2-ZjV4J6TzNyJikS9OCVqkw&callback=getRestaurant&v=weekly"

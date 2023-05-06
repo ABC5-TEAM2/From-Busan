@@ -22,24 +22,66 @@ video {
   /*filter:opacity(60%);*/
 }
 
-#maps-container{
-  width: 100%;
-  height: 400px;
+#popup{
+	width:100%;
+}
+#panel-container{
+	width:100%;
+
+	height:300px;
+	display:flex;
+	justify-content: center;
+	align-items: center;
+}
+#panel{
+		width:50%;
+		display:flex;
+		margin-left : 20px;
+		flex-direction: column;
+}
+#panel>h1{
+	margin-bottom:10px;
 }
 
+input#start,#end{
+  width: 50%;
+  height: 32px;
+  font-size: 15px;
+  border: 0;
+  border-radius: 15px;
+  margin-bottom:10px;
+  outline: none;
+  padding-left: 10px;
+  background-color: rgb(233, 233, 233);
+}
+input[type=button]{
+		background-color: #da202c;
+    border: 0;
+    border-radius: 4px;
+    color: #fff;
+    display: inline-block;
+    font-size: 14px;
+    height: 35px;
+    line-height: 1.73rem;
+    line-height: 35px;
+    max-width: 100%;
+    overflow: hidden;
+    padding: 0 15px;
+    text-align: center;
+    text-overflow: ellipsis;
+		margin-left:10px;
+}
+
+
+
 #map{
-  
   float: left;
-  width: 600px;
-  height: 400px;
+  width: 50%;
+  height: 300px;
   background-color: grey;
   
 }
-#map-contents{
-  float: left;
-  width: 600px;
-  height: 400px;
-}
+
 /* tourlist-spot */
 #tourist-spot-container{
   width: 100%; /*1200px*/

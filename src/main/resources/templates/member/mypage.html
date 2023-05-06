@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>myPage</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="/js/index.js"></script>
+<link rel="stylesheet" href="/css/header.css" />
+<link rel="stylesheet" href="/css/myPage.css">
+</head>
+<body>
+	<div th:replace="fragments/header :: header"></div>
+	<div id="myPage-container">
+		<h2>
+			<span th:text="${loginMember}"></span>様の活動<span class="myPage">(My
+				Page)</span>
+		</h2>
+		<div class="MY">
+			<input class="in1" type="button" value="My List" th:onclick="location.href='/member/jjimList'"> 
+			<input class="in2" type="button" value="Wish List"> 
+			<input class="in3" type="button" value="My reply">
+		</div>
+
+	</div>
+</body>
+</html>
