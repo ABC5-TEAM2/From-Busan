@@ -38,8 +38,8 @@
 						<div class="search-window">
 								<div class="search-wrap">
 									<input id="searchText" type="search" name="searchText"
-										placeholder="검색어를 입력해주세요.">
-									<button type="button" onclick="search()" class="btn search-btn">검색</button>
+										th:attr="placeholder=#{${'alert.Pleasesc'}}">
+									<button type="button" onclick="search()" class="btn search-btn">[[#{alert.Search}]]</button>
 								</div>
 						</div>
 					</div>
@@ -49,12 +49,12 @@
 					<table class="review-table">
 						<thead>
 							<tr class="mainTitle">
-								<th scope="col" class="th-num">No</th>
-								<th scope="col" class="th-place">Place</th>
-								<th scope="col" class="th-title">Title</th>
-								<th scope="col" class="th-writer">Writer</th>
-								<th scope="col" class="th-date">Date</th>
-								<th scope="col" class="th-hit">HIT</th>
+								<th scope="col" class="th-num">>[[#{alert.No1}]]</th>
+								<th scope="col" class="th-place">[[#{alert.Place}]]</th>
+								<th scope="col" class="th-title">[[#{alert.Title}]]</th>
+								<th scope="col" class="th-writer">[[#{alert.Writer}]]</th>
+								<th scope="col" class="th-date">[[#{alert.Date}]]</th>
+								<th scope="col" class="th-hit">[[#{alert.HIT}]]</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -76,10 +76,17 @@
 
 					<div class="center">
 						<input class="input-btn" type="button"
-							onclick="location.href='/review/list'" value="목록으로"> 
+							onclick="location.href='/review/list'" data-value="#{alert.main}" th:value="#{alert.main}"> 
 						<input class="input-btn" type="button"
-							onclick="location.href='/review/write'" value="글쓰기">
+							onclick="location.href='/review/write'" data-value="#{alert.Writing}" th:value="#{alert.Writing}">
 					</div>
+					<script th:inline="javascript">
+				$(document).ready(function() {
+					  $('input[type="button"]').each(function() {
+					    $(this).val($(this).attr('value'));
+					  });
+					});
+				</script>
 				</div>
 			</section>
 

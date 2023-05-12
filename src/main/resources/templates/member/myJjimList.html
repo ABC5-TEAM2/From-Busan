@@ -28,9 +28,9 @@
 <div th:replace="fragments/header :: header"></div>
 
 	<div id="container" class="center">
-		<h1>[ 내 찜 리스트 ]</h1>
+		<h1>[ [[#{alert.preferencem}]] ]</h1>
 		<br>
-		<h1>[ 명소 찜 리스트 ]</h1>
+		<h1>[ [[#{alert.preferencea}]] ]</h1>
 		<div class="row">
 			<div class="col-md-4 mb-4" th:if="${findMyListSpots}"
 				th:each="tourist, touristStat: ${findMyListSpots}">
@@ -52,7 +52,7 @@
 			
 		</div>
 		
-		<h1>[ 축제 찜 리스트 ]</h1>
+		<h1>[ [[#{alert.preferencef}]] ]</h1>
 		<div class="row">
 			<div class="col-md-4 mb-4" th:if="${findMyListFes}"
 				th:each="festival, festivalStat: ${findMyListFes}">
@@ -73,7 +73,7 @@
 			
 			
 		</div>
-		<h1>[ 코스 찜 리스트 ]</h1>
+		<h1>[ [[#{alert.preferencec}]] ]</h1>
 		<div class="row">
 			<div class="col-md-4 mb-4" th:if="${findMyListCos}"
 				th:each="course, courseStat: ${findMyListCos}">

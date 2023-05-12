@@ -30,7 +30,7 @@
 
 			<section class="notice">
 				<div class="page-title">
-					<h1>[ 게시판 - 나의 리뷰 리스트 ]</h1>
+					<h1>[ [[#{alert.myReviewList}]] ]</h1>
 				</div>
 					
 				<div class="review-container">
@@ -39,8 +39,8 @@
 						<div class="search-window">
 								<div class="search-wrap">
 									<input id="searchText" type="search" name="searchText"
-										placeholder="검색어를 입력해주세요.">
-									<button type="button" onclick="search()" class="btn search-btn">검색</button>
+										th:attr="placeholder=#{${'alert.Pleasesc'}}">
+									<button type="button" onclick="search()" class="btn search-btn">[[#{alert.Search}]]</button>
 								</div>
 						</div>
 					</div>
@@ -51,12 +51,12 @@
 					<table class="review-table">
 						<thead>
 							<tr class="mainTitle">
-								<th scope="col" class="th-num">No</th>
-								<th scope="col" class="th-place">Place</th>
-								<th scope="col" class="th-title">Title</th>
-								<th scope="col" class="th-writer">Writer</th>
-								<th scope="col" class="th-date">Date</th>
-								<th scope="col" class="th-hit">HIT</th>
+								<th scope="col" class="th-num">[[#{alert.No1}]]</th>
+								<th scope="col" class="th-place">[[#{alert.Place}]]</th>
+								<th scope="col" class="th-title">[[#{alert.Title}]]</th>
+								<th scope="col" class="th-writer">[[#{alert.Writer}]]</th>
+								<th scope="col" class="th-date">[[#{alert.Date}]]</th>
+								<th scope="col" class="th-hit">[[#{alert.HIT}]]</th>
 							</tr>
 						</thead>
 						<tbody th:if="${session.loginMember != null}">
@@ -79,12 +79,19 @@
 				<p>
 				<div class="center">
 					<input type="button" onclick="location.href='/review/list'"
-						value="목록으로" class="input-btn"> 
+						data-value="#{alert.onlist}" th:value="#{alert.onlist}" class="input-btn">
 					<input type="button" class="input-btn"
-						onclick="location.href='/review/write'" value="글쓰기"> 
+						onclick="location.href='/review/write'" data-value="#{alert.Writing}" th:value="#{alert.Writing}"> 
 					<input class="input-btn"
-						type="button" onclick="location.href='/'" value="메인으로">
+						type="button" onclick="location.href='/'" data-value="#{alert.main}" th:value="#{alert.main}">
 				</div>
+				<script th:inline="javascript">
+				$(document).ready(function() {
+					  $('input[type="button"]').each(function() {
+					    $(this).val($(this).attr('value'));
+					  });
+					});
+				</script>
 				</div>
 			</section>
 

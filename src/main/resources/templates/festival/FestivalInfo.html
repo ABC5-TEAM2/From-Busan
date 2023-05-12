@@ -586,9 +586,9 @@ function myList(festival_id) {
 
 
 		<nav class="tabnav">
-			<a class="item" href="#itemcntnts">상세 정보</a> <a class="item"
-				href="#information">이용 정보</a> <a class="item" href="#mapContainer"
-				onclick="getRestaurant()">주변 맛집 지도</a>
+			<a class="item" href="#itemcntnts">[[#{alert.More}]]</a> <a class="item"
+				href="#information">[[#{alert.Usage}]]</a> <a class="item" href="#mapContainer"
+				onclick="getRestaurant()">[[#{alert.Map}]]</a>
 		</nav>
 
 		<div id="spot-header-container">
@@ -645,26 +645,26 @@ function myList(festival_id) {
 			<div class="information" id="information">
 				<table class="information-table" border="1px solid black">
 					<tr>
-						<th>주소</th>
-						<td th:utext="*{addr1}"></td>
+						<th>[[#{alert.Address}]]</th>
+						<td th:utext="*{addr1}"></td>[[#{alert.usagef}]]
 					</tr>
 					<tr>
-						<th>전화번호</th>
+						<th>[[#{alert.Phonenu}]]</th>
 						<td th:utext="*{cntct_tel}"></td>
 					</tr>
 					<tr>
-						<th>관련 홈페이지</th>
+						<th>[[#{alert.Related}]]</th>
 						<td><a href="#"
 							th:onclick="findFestival([[${festival.homepage_url}]])"
 							th:text="${festival.homepage_url}"></a></td>
 					</tr>
 					<tr>
-						<th>최단 교통정보</th>
+						<th>[[#{alert.Shortest}]]</th>
 						<td th:utext="*{trfc_info}"></td>
 					</tr>
 
 					<tr>
-						<th>이용 요금</th>
+						<th>[[#{alert.usagef}]]</th>
 						<td th:utext="*{usage_amount}"></td>
 					</tr>
 
@@ -682,11 +682,18 @@ function myList(festival_id) {
 				<div class="modal">
 					<span class="close">&times;</span>
 					<div id="modalText"></div>
-				</div>
+				</div>[[#{alert.usagef}]]
 				<div>
-					<input type="button" onclick="getRestaurant()" value="맛집 찾기"> 
-					<input type="button" onclick="getDb()" value="명소 찾기">
+					<input type="button" onclick="getRestaurant()" data-value="#{alert.Findingg}" th:value="#{alert.Findingg}"> 
+					<input type="button" onclick="getDb()" data-value="#{alert.Searchfo}" th:value="#{alert.Searchfo}">
 				</div>
+				<script th:inline="javascript">
+				$(document).ready(function() {
+					  $('input[type="button"]').each(function() {
+					    $(this).val($(this).attr('value'));
+					  });
+					});
+			</script>
 			</div>
 			
 			

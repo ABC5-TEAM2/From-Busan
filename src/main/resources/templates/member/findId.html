@@ -135,11 +135,11 @@
 
   
    if (name === "") {
-     alert("이름을 입력하세요");
+     alert("[[#{alert.alertName}]]");
      return;
    }
    if (phone_number === "") {
-     alert("전화번호를 입력하세요");
+     alert("[[#{alert.alertPhone}]]");
      return;
    }
    $.ajax({
@@ -182,7 +182,7 @@
      	      modal.style.display = "none";
      	    });
      	  } else {
-     	    alert("일치하는 정보가 없습니다");
+     	    alert("[[#{alert.alertnof}]]");
      	  }
      	}
      ,error: function (xhr, status, error) {

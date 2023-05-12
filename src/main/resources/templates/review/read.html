@@ -277,21 +277,35 @@
 				th:if="${session.loginMember.member_id == review.member_id}">
 				<input type="button"
 					th:onclick="|location.href='/review/update?review_id=${review.review_id}'|"
-					value="수정하기">
+					data-value="#{alert.modify}" th:value="#{alert.modify}">
 				<input type="button"
 					th:onclick="|location.href='/review/delete?review_id=${review.review_id}'|"
-					value="삭제하기">
+					data-value="#{alert.delete}" th:value="#{alert.delete}">
 			</th:block>
+			<script th:inline="javascript">
+				$(document).ready(function() {
+					  $('input[type="button"]').each(function() {
+					    $(this).val($(this).attr('value'));
+					  });
+					});
+			</script>
 		</div>
 
 
 
 
 		<div>
-			<label for="reply">리플쓰기: </label> <input type="text" id="reply"
-				name="reply"> <input type="button" value="등록"
+			<label for="reply">[[#{alert.Ripplew}]]: </label> <input type="text" id="reply"
+				name="reply"> <input type="button" data-value="#{alert.Registration}" th:value="#{alert.Registration}"
 				onclick="writeReply()">
 		</div>
+			<script th:inline="javascript">
+				$(document).ready(function() {
+					  $('input[type="button"]').each(function() {
+					    $(this).val($(this).attr('value'));
+					  });
+					});
+			</script>
 
 		<div id="replies"></div>
 

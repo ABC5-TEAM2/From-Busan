@@ -76,42 +76,42 @@
 
       // 리플 내용이 없으면 등록하지 않는다.
       if (name === "") {
-        alert("이름을 입력하세요");
+        alert("[[#{alert.alertName}]]");
         return;
       }
       if (phone_number === "") {
-        alert("전화번호를 입력하세요");
+        alert("[[#{alert.alertPhone}]]");
         return;
       }
       if (password === "") {
-    	     alert("비밀번호를 입력하세요");
+    	     alert("[[#{alert.plsPas}]]");
     	     return;
     	   }
   	   if (password2 === "") {
-  	     alert("비밀번호를 재입력하세요");
+  	     alert("[[#{alert.plsPas2}]]");
   	     return;
     	   }
   	 if (password !== password2) {
-  	     alert("비밀번호를 동일하게 입력하세요");
+  	     alert("[[#{alert.plsPas3}]]");
   	     return;
   	   }
   	if (password.length < 4 || password.length > 20) {
-		alert("비밀번호는 5 ~ 10자리 사이여야 합니다.");
+		alert("[[#{alert.alertPassword}]]");
 		password.focus();
 		return ;
 	}
   	if (password=== oldPassword) {
-		alert("예전 비밀번호로 고칠 수 없습니다.");
+		alert("[[#{alert.alertpas}]]");
 		password.focus();
 		return ;
 	}
   	if (phone_number.charAt(3) !== '-' || phone_number.charAt(8) !== '-') {
-        alert("-의 위치가 정확하지 않습니다.");
+        alert("[[#{alert.alertcharAt}]]");
         phone_number.focus();
         return false;
     }
     if (phone_number.length !== 13) {
-        alert("전화번호 수가 정확하지 않습니다.");
+        alert("[[#{alert.alertlength}]]");
         phone_number.focus();
         return false;
     }
@@ -152,7 +152,7 @@
 
         	}
         ,error: function (xhr, status, error) {
-       	alert("업데이트에 실패하였습니다.");
+       	alert("[[#{alert.alertupdate}]]");
           console.log(status);
         }
       });
@@ -167,18 +167,32 @@
 	  <div id="login-container">
         <img class="img" src="/image/bugi.png" alt="bugi">
 			<form  th:object="${findIdForm}" >
-	            <h1>Find Password</h1>
+	            <h1>[[#{alert.FindPas}]]</h1>
 	            <div class="login-input">
-	                <input type="text" id="name" th:field="${findIdForm.name}" placeholder="  이름을 입력해주세요.">
-	                <input type="text" id="phone_number" th:field="${findIdForm.phone_number}" placeholder="   전화번호를 '-'와 함께 입력해주세요.">
-	                <input type="text" id="password"th:field="${findIdForm.password}" placeholder="   비밀번호를 입력해주세요.">
-	                <input type="text" id="password2" placeholder="   비밀번호를 재입력해주세요.">
+	                <input type="text" id="name" th:field="${findIdForm.name}" th:attr="placeholder=#{${'alert.plsName'}}">
+	                <input type="text" id="phone_number" th:field="${findIdForm.phone_number}" th:attr="placeholder=#{${'alert.plsPhone'}}">
+	                <input type="text" id="password"th:field="${findIdForm.password}" th:attr="placeholder=#{${'alert.plsPas'}}">
+	                <input type="text" id="password2" th:attr="placeholder=#{${'alert.plsPas2'}}">
 	            </div>
+	           <script th:inline="javascript">
+				$(document).ready(function() {
+					  $('input[type="text"]').each(function() {
+					    $(this).val($(this).attr('value'));
+					  });
+					});
+			</script>
 				<br>
 				<br>
 	            <div class="login-submit">
-				<input class="btn-login" type="button" value="PASSWORD" onclick="updateMember()" >
+				<input class="btn-login" type="button" data-value="#{alert.Password}" th:value="#{alert.Password}" onclick="updateMember()" >
 	            </div>
+	            <script th:inline="javascript">
+				$(document).ready(function() {
+					  $('input[type="button"]').each(function() {
+					    $(this).val($(this).attr('value'));
+					  });
+					});
+				</script>
 	            <div id="countdown"></div>
        		 </form>
          </div> 

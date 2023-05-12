@@ -13,14 +13,20 @@
 	<div th:replace="fragments/header :: header"></div>
 	<div id="myPage-container">
 		<h2>
-			<span th:text="${loginMember}"></span>様の活動<span class="myPage">(My
-				Page)</span>
+			<span th:text="${loginMember}"></span>[[#{alert.activities}]]<span class="myPage">([[#{alert.myPage}]])</span>
 		</h2>
 		<div class="MY">
-			<input class="in1" type="button" value="My List" th:onclick="location.href='/review/myReviewList'"> 
-			<input class="in2" type="button" value="Wish List" th:onclick="location.href='/member/jjimList'"> 
-			<input class="in3" type="button" value="Update Info" onclick="location.href='/member/updateMember'">
+			<input class="in1" type="button" data-value="#{alert.MyList}" th:value="#{alert.MyList}" th:onclick="location.href='/review/myReviewList'"> 
+			<input class="in2" type="button" data-value="#{alert.WishList}" th:value="#{alert.WishList}" th:onclick="location.href='/member/jjimList'"> 
+			<input class="in3" type="button" data-value="#{alert.UpdateInfo}" th:value="#{alert.UpdateInfo}" onclick="location.href='/member/updateMember'">
 		</div>
+					<script th:inline="javascript">
+				$(document).ready(function() {
+					  $('input[type="button"]').each(function() {
+					    $(this).val($(this).attr('value'));
+					  });
+					});
+			</script>
 
 	</div>
 </body>
