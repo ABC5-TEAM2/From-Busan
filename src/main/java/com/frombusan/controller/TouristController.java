@@ -158,6 +158,7 @@ public class TouristController {
  					touristMapper.deleteMyList(wishboard_id);
  					touristSpot.setJjim(false);
  			    }
+ 			    touristMapper.updateTourist(touristSpot);
  			    
  		    return ResponseEntity.ok(touristSpot);
  		  } else {

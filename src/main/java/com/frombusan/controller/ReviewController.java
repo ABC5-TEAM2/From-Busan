@@ -123,7 +123,7 @@ public class ReviewController {
     @GetMapping("list")
     public String list(@RequestParam(value = "page", defaultValue = "1") int page,
                        @RequestParam(value = "searchText", defaultValue = "") String searchText,
-                       Model model, @SessionAttribute(value = "loginMember", required = false) Member loginMember) {
+                       Model model) {
         log.info("searchText: {}", searchText);
         int total = reviewService.getTotal(searchText);
 
