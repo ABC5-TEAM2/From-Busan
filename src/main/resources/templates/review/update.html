@@ -1,23 +1,38 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>게시글 수정</title>
-    <link rel="stylesheet" href="/css/default.css">
-    <link rel="stylesheet" href="/css/header.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="/js/index.js"></script>
-    <script th:inline="javascript">
-    
+<meta charset="UTF-8">
+<title>게시글 수정</title>
+<link rel="stylesheet" href="/css/header.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="/js/index.js"></script>
+<script src="/js/summernote/summernote-lite.js"></script>
+<script src="/js/summernote/lang/summernote-ko-KR.js"></script>
+<link rel="stylesheet" href="/css/summernote/summernote-lite.css">
+<link rel="stylesheet" href="/css/reviewUpdateForm.css">
+<script th:inline="javascript">
+    $(document).ready(function() {
+    	//여기 아래 부분
+    	$('#summernote').summernote({
+    			height:800,
+    		  minHeight: null,             // 최소 높이
+    		  maxHeight: null,             // 최대 높이
+    		  focus: true,                  // 에디터 로딩후 포커스를 맞출지 여부
+    		  lang: "ko-KR",					// 한글 설정
+    		  placeholder: '최대 2048자까지 쓸 수 있습니다'	//placeholder 설정
+              
+    	});
+    });
       
-      function deleteImg(img_id,index) {
+     /*  function deleteImg(img_id) {
 
    	    let review_id = [[${review.review_id}]];
 	   	let file = event.currentTarget.parentElement;
-	  //let fileName = file.parentElement.querySelector("a").innerText;
+	  	//let fileName = file.parentElement.querySelector("a").innerText;
    	 	document.getElementById("fileRemoved").value = "true";
    	 	
-	   	 let attachedImg = document.getElementById("attachedImg-" + index);
+	   	 //let attachedImg = document.getElementById("attachedImg-" + index);
 	     attachedImg.style.display = "none";
   	 	
    	    $.ajax({
@@ -30,17 +45,18 @@
    	            console.log('Error occurred while deleting file:', error);
    	        	}
    	    	});
-    	}
+    	} */
       
-      $(function() {
+    /*   $(function() {
           // 페이지가 완전히 로드된 후에 함수 호출
           let a = [[${files}]];
           console.log(a);
-        });
+        }); */
       
     </script>
 </head>
 <body>
+<<<<<<< HEAD
 <div th:replace ="fragments/header :: header">
   	</div>
 <div id="container">
@@ -124,5 +140,53 @@
 			</script>
   </form>
 </div>
+=======
+	<div th:replace="fragments/header :: header"></div>
+	<div id="update-container">
+		<form th:action="@{/review/update(review_id=${review.review_id})}"
+			th:object="${review}" method="post">
+			<div class="update-header">
+				Update Review <span> <input class="update-btn" type="submit"
+					value="수정하기"> <input class="update-btn" type="reset"
+					value="취소">
+
+				</span>
+			</div>
+			<table class="update-table">
+				<tr>
+					<th>리뷰 장소</th>
+					<td><span th:text="*{review_place}">
+							<div class="error" th:errors="*{title}"></div></td>
+				</tr>
+				<tr>
+					<th>제목</th>
+					<td><input type="text" th:field="*{title}">
+						<div class="error" th:errors="*{title}"></div></td>
+				</tr>
+				<tr>
+					<th>조회수</th>
+					<td><span th:text="*{hit}"></span></td>
+				</tr>
+				<tr>
+					<th>작성일</th>
+					<td><span
+						th:text="*{#temporals.format(created_time, 'yyyy. MM. dd')}"></span></td>
+				</tr>
+				<tr>
+					<th>작성자</th>
+					<td th:text="*{member_id}"></td>
+				</tr>
+			</table>
+			<div class="error" th:errors="*{contents}"></div>
+			<div id="summer-box">
+				<textarea id="summernote" name="contents" th:utext="*{contents}"></textarea>
+			</div>
+
+			<input type="hidden" th:field="*{hit}"> <input type="hidden"
+				th:field="*{created_time}"> <input type="hidden"
+				th:field="*{member_id}">
+		</form>
+	</div>
+>>>>>>> 46eb390711448e1bbe87d3a48f6bcb9b79cf88ee
 </body>
 </html>

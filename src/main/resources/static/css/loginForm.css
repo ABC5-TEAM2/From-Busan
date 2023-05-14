@@ -54,10 +54,12 @@ form {
 }
 
 .btn-login{
-    height: 35px;
-    width: 100px;
+    height: 33px;
+    width: 95px;
     background-color: white;
     border: 2px solid black;
+    text-align: center;
+    
 }
 
 .btn-login:hover{

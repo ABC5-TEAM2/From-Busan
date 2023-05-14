@@ -17,4 +17,6 @@ public interface MemberMapper {
     List<findIdForm> findIdOrPassword();
     
     void updateMember(Member updateMember);
+	//idcheck
+    int idCheck(String member_id);
 }

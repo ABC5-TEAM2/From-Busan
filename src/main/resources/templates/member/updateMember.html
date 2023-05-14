@@ -10,12 +10,17 @@
     <link rel="stylesheet" href="/css/loginForm.css" />
     
    <style>
-	.popup-content {
-	  position: absolute;
-	  top: 50%;
-	  left: 50%;
-	  transform: translate(-50%, -50%);
-	}
+.btn-login{
+    margin-left: 45%;
+    
+}
+
+.popup-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 	
 .modal {
   display: none; /* 모달 숨기기 */
@@ -96,7 +101,11 @@
   	     return;
   	   }
   	if (password.length < 4 || password.length > 20) {
+<<<<<<< HEAD
 		alert("[[#{alert.alertPassword}]]");
+=======
+		alert("비밀번호는 4 ~ 10자리 사이여야 합니다.");
+>>>>>>> 46eb390711448e1bbe87d3a48f6bcb9b79cf88ee
 		password.focus();
 		return ;
 	}
@@ -143,7 +152,8 @@
         	      if (timeLeft <= 0) {
         	        clearInterval(timer);
         	        modal.style.display = "none"; // 모달 닫기
-        	       window.location.href = '/member/myPage';
+        	        opener.location.href = '/member/myPage';
+                    window.close();
         	      } else {
         	        countDownEl.innerHTML = `창이 ${timeLeft}초 후에 자동으로 닫힙니다.`;
         	        timeLeft--;
@@ -167,12 +177,21 @@
 	  <div id="login-container">
         <img class="img" src="/image/bugi.png" alt="bugi">
 			<form  th:object="${findIdForm}" >
+<<<<<<< HEAD
 	            <h1>[[#{alert.FindPas}]]</h1>
 	            <div class="login-input">
 	                <input type="text" id="name" th:field="${findIdForm.name}" th:attr="placeholder=#{${'alert.plsName'}}">
 	                <input type="text" id="phone_number" th:field="${findIdForm.phone_number}" th:attr="placeholder=#{${'alert.plsPhone'}}">
 	                <input type="text" id="password"th:field="${findIdForm.password}" th:attr="placeholder=#{${'alert.plsPas'}}">
 	                <input type="text" id="password2" th:attr="placeholder=#{${'alert.plsPas2'}}">
+=======
+	            <h1>Update Information</h1>
+	            <div class="login-input">
+	                <input type="text" id="name" th:field="${loginMember.name}" placeholder="  이름을 입력해주세요.">
+	                <input type="text" id="phone_number" th:field="${loginMember.phone_number}" placeholder="   전화번호를 '-'와 함께 입력해주세요.">
+	                <input type="text" id="password" placeholder="   비밀번호를 입력해주세요.">
+	                <input type="text" id="password2" placeholder="   비밀번호를 재입력해주세요.">
+>>>>>>> 46eb390711448e1bbe87d3a48f6bcb9b79cf88ee
 	            </div>
 	           <script th:inline="javascript">
 				$(document).ready(function() {
@@ -183,6 +202,7 @@
 			</script>
 				<br>
 				<br>
+<<<<<<< HEAD
 	            <div class="login-submit">
 				<input class="btn-login" type="button" data-value="#{alert.Password}" th:value="#{alert.Password}" onclick="updateMember()" >
 	            </div>
@@ -193,8 +213,14 @@
 					  });
 					});
 				</script>
+=======
+	            
+>>>>>>> 46eb390711448e1bbe87d3a48f6bcb9b79cf88ee
 	            <div id="countdown"></div>
        		 </form>
+       		 <div class="login-submit">
+				<input class="btn-login" type="button" value="UPDATE" onclick="updateMember()" >
+	            </div>
          </div> 
     	</div>
     

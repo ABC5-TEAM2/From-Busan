@@ -5,6 +5,7 @@
 <title>게시글 읽기</title>
 <link rel="stylesheet" href="/css/header.css">
 <link rel="stylesheet" href="/css/reviewRead.css">
+<script src="/js/index.js"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <link rel="stylesheet"
@@ -16,7 +17,37 @@
 <script src="/js/index.js"></script>
 
 <script th:inline="javascript">
-    
+
+
+
+  let createTime = [[${review.created_time}]];
+  function timeForToday() {
+      const displayCreatedAt = (createdAt) => {
+        let startTime = new Date(createdAt);
+        let nowTime = Date.now();
+        let timeDiff = nowTime - startTime;
+        let result = "";
+
+        if (timeDiff < 60000) {
+          result = "방금 전";
+        } else if (timeDiff < 3600000) {
+          result = `${Math.floor(timeDiff / 60000)}분 전`;
+        } else if (timeDiff < 86400000) {
+          result = `${Math.floor(timeDiff / 3600000)}시간 전`;
+        } else {
+          result = startTime.toLocaleDateString();
+        }
+
+        return `<span>${result}</span>`;
+      };
+
+      // 특정 날짜 값 (createdAt)을 전달하여 결과 얻기
+      let result = displayCreatedAt(createTime);
+	  //console.log(result);
+      return result;
+    }
+  
+  
     lightbox.option({
   	  resizeDuration: 200,
   	  wrapAround: true,
@@ -69,11 +100,11 @@
       function showReplies(data) {
         $("#replies").html("");
         let str = "";
-        str += "<table>";
+        str += "<table class='reply-table'>";
         str += "  <tr>";
         str += "      <th>No.</th>";
-        str += "      <th>내용.</th>";
         str += "      <th>작성자.</th>";
+        str += "      <th>내용.</th>";
         str += "      <th>작성일</th>";
         str += "  </tr>";
         if (data.length > 0) {
@@ -86,22 +117,25 @@
                     + created_time.getMinutes();
 
             str += "<tr>";
-            str += "  <td class='center'>" + (idx + 1) + "</td>";
+            str += "  <td>" + (idx + 1) + "</td>";
+            str += "  <td>" + obj.member_id + "</td>";
             if (obj.writer == true) {
-              str += "  <td><input type='text' id='reply_" + obj.reply_id + "' value='" + obj.content + "'>";
-              str += "<input type='button' value='수정' onclick='updateReply(" + obj.reply_id + ")'>";
-              str += "<input type='button' value='삭제' onclick='removeReply(" + obj.reply_id + ")'>";
+              str += "  <td><input class='reply-input-btn' type='text' id='reply_" + obj.reply_id + "' value='" + obj.content + "'>";
+              //str += "<button type='button' class='reply-btn'  >작성</button>";
+              str += " <button type='button' class='reply-btn'  onclick=updateReply(" + obj.reply_id + ")>수정</button>";
+              str += "<button type='button' class='reply-btn'  onclick=removeReply(" + obj.reply_id + ")>삭제</button>";
+               //str += "<button class='review-button' type='button' value='수정' onclick='updateReply(" + obj.reply_id + ")'>";
+              //str += "<button class='review-button' type='button' value='삭제' onclick='removeReply(" + obj.reply_id + ")'>";
             } else {
               str += "  <td>" + obj.content;
             }
             str += "  </td>";
-            str += "  <td class='center'>" + obj.member_id + "</td>";
-            str += "  <td class='center'>" + time + "</td>";
+            str += "  <td>" + time + "</td>";
             str += "</tr>";
           });
         } else {
           str += "<tr>"
-          str += "<td class='center' colspan='4'>등록된 리플이 없습니다.</td>"
+          str += "<td colspan='4'>등록된 리플이 없습니다.</td>"
           str += "<tr>"
         }
         str += "</table>";
@@ -240,8 +274,11 @@
 					<span th:text="*{member_id}"
 						style="font-size: 20px; font-weight: bold;"></span>
 					<!--아이디 바로 옆 날짜  -->
-					<span
-						th:text="${#temporals.format(review.created_time, 'yy. MM. dd')}"></span>
+					<span id="mySpan"></span>
+					<script>
+      // 결과를 span에 표시하는 함수 실행
+      document.getElementById("mySpan").innerHTML = timeForToday();
+    </script>
 				</div>
 				<div id="heart-container">
 					<div class="heartWish">
@@ -291,13 +328,21 @@
 			</script>
 		</div>
 
+		<div class="reply-container">
+			<div id="replies" class="reply-div"></div>
 
+<<<<<<< HEAD
 
 
 		<div>
 			<label for="reply">[[#{alert.Ripplew}]]: </label> <input type="text" id="reply"
 				name="reply"> <input type="button" data-value="#{alert.Registration}" th:value="#{alert.Registration}"
 				onclick="writeReply()">
+=======
+			<input class="reply-input" id="reply" name="reply" type="text"
+				placeholder=" 댓글을 작성해주세요." value="">
+			<button type="button" class="reply-btn" onclick="writeReply()">작성</button>
+>>>>>>> 46eb390711448e1bbe87d3a48f6bcb9b79cf88ee
 		</div>
 			<script th:inline="javascript">
 				$(document).ready(function() {
@@ -307,7 +352,6 @@
 					});
 			</script>
 
-		<div id="replies"></div>
 
 
 

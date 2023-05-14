@@ -48,29 +48,17 @@ public class ReviewService {
     public Review readReview(Long review_id) {
     	Review review = findReview(review_id);
     	review.addHit();
-        updateReview(review, false, null);
+        updateReview(review);
         return review;
     }
 
     @Transactional
-    public void updateReview(Review updateReview, boolean isFileRemoved, MultipartFile file) {
+    public void updateReview(Review updateReview) {
         if (updateReview != null) {
-            log.info("review_id5: {}", isFileRemoved);
-
+            log.info("review_id5: {}", updateReview);
             reviewMapper.updateReview(updateReview);
-            // 첨부파일 정보를 가져온다.
-            
-            List<AttachedImg> files = reviewMapper.findFilesByReviewId(updateReview.getReview_id());
-            
-        	 }
-            // 새로 저장할 파일이 있으면 저장한다.
-            if (file != null && file.getSize() > 0) {
-                // 첨부파일을 서버에 저장한다.
-                AttachedImg savedFile = fileService.saveFile(file);
-                savedFile.setReview_id(updateReview.getReview_id());
-                reviewMapper.saveImg(savedFile);
-            }
         }
+    }
 
     @Transactional
     public void removeAttachedFile(Long img_id) {

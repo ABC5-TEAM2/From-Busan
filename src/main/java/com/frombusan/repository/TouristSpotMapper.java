@@ -22,6 +22,8 @@ public interface TouristSpotMapper {
 	
 	List<Tourist_Spot> findAllTourist();
 	
+	List<Tourist_Spot> findAllTouristForMain();
+	
 	Tourist_Spot findTouristSpot(Long tourist_Spot_id);
 	
 	

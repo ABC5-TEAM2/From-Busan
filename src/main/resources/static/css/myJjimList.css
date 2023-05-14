@@ -1,0 +1,171 @@
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900");
+
+
+/*============nav바============ㅌ*/
+.nav-container{
+	width:1200px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.item:hover {
+  color: #333;
+}
+
+.item {
+  position: relative;
+	
+	
+}
+
+.item:hover {
+  color: #333;
+}
+
+.item:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 3px;
+  opacity: 0;
+  background-color: #cdcdcd;
+  border-radius: 6px 6px 0 0;
+  transition: .3s;
+}
+
+.item:hover:before {
+  bottom: 0;
+  opacity: 1;
+}
+
+.tabnav {
+  font-size: 17px;
+  color: #666;
+  position: relative;
+  display: flex;
+  margin: 2em auto;
+  justify-content: center;
+}
+
+.tabnav>a {
+  display: block;
+  width: 20%;
+  padding: .75em 0;
+  color: #333;
+  text-decoration: none;
+  text-align: center;
+}
+
+
+
+
+#card-container {
+  margin: 0 auto;
+  width: 1400px;
+}
+
+.container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 100px 50px;
+  padding: 100px 50px;
+}
+.container .card {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 350px;
+  height: 300px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.15);
+  transition: 0.5s;
+}
+.container .card:hover {
+  height: 400px;
+}
+.container .card .imgBx {
+  position: absolute;
+  top: 20px;
+  width: 300px;
+  height: 220px;
+  background: #333;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: 0.5s;
+}
+.container .card:hover .imgBx {
+  top: -100px;
+  scale: 0.75;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+}
+.container .card .imgBx img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.container .card .content {
+  position: absolute;
+  top: 252px;
+  width: 100%;
+  padding: 0 30px;
+  height: 35px;
+  overflow: hidden;
+  text-align: center;
+  transition: 0.5s;
+}
+.container .card:hover .content {
+  top: 130px;
+  height: 250px;
+}
+
+.container .card .content h2 {
+  font-size: 1.5em;
+  font-weight: 700;
+  color: var(--clr);
+}
+.container .card .content p {
+  color: #333;
+}
+.container .card .content a {
+  position: relative;
+  top: 15px;
+  display: inline-block;
+  padding: 12px 25px;
+  background: var(--clr);
+  color: #fff;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 8px;
+}
+.listItem{
+	margin-top:15px;
+	position:relative;
+	margin-left:10px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

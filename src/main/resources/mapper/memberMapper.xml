@@ -44,7 +44,12 @@
     </update>
     
     
-    
+    <select id="idCheck" parameterType="String" resultType="Integer">
+      SELECT COUNT(*) FROM member
+      WHERE
+          member_id = #{member_id}
+			</select>
+
     
     
     

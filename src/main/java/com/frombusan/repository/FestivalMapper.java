@@ -24,6 +24,7 @@ public interface FestivalMapper {
 	//페이징
 	List<Festival> findAllFestival(String searchText,RowBounds rowBounds);
 	
+	List<Festival> findAllFestivalForMain();
 
 //좋아요 기능	
 	void updateFestival(Festival updateFestival);

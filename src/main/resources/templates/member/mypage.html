@@ -6,6 +6,20 @@
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="/js/index.js"></script>
+
+    <script th:inline="javascript">
+
+function updateMember() {
+	  
+	//var mainTitle = encodeURIComponent('${festival.main_title}');
+    var url = '/member/updateMember' //reviewList?main_title='' + mainTitle;
+  	var options = 'width=700,height=500,left=' + (screen.width / 2 - 350) + ',top=' + (screen.height / 2 - 350);
+    window.open(url, 'Popup', options);
+
+}
+
+</script>
+
 <link rel="stylesheet" href="/css/header.css" />
 <link rel="stylesheet" href="/css/myPage.css">
 </head>
@@ -16,9 +30,18 @@
 			<span th:text="${loginMember}"></span>[[#{alert.activities}]]<span class="myPage">([[#{alert.myPage}]])</span>
 		</h2>
 		<div class="MY">
+<<<<<<< HEAD
 			<input class="in1" type="button" data-value="#{alert.MyList}" th:value="#{alert.MyList}" th:onclick="location.href='/review/myReviewList'"> 
 			<input class="in2" type="button" data-value="#{alert.WishList}" th:value="#{alert.WishList}" th:onclick="location.href='/member/jjimList'"> 
 			<input class="in3" type="button" data-value="#{alert.UpdateInfo}" th:value="#{alert.UpdateInfo}" onclick="location.href='/member/updateMember'">
+=======
+			<input class="in1" type="button" value="My List" th:onclick="location.href='/review/myReviewList'"> 
+			<input class="in2" type="button" value="Wish List" th:onclick="location.href='/member/jjimList'"> 
+			<input class="in3" type="button" value="Update Info" onclick="updateMember()">
+			
+			
+			
+>>>>>>> 46eb390711448e1bbe87d3a48f6bcb9b79cf88ee
 		</div>
 					<script th:inline="javascript">
 				$(document).ready(function() {

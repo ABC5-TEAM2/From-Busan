@@ -3,30 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <title>게시판 리스트</title>
-<link rel="stylesheet" href="/css/LeeTest.css">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
 <link rel="stylesheet" href="/css/header.css" />
-<link rel="stylesheet" href="/css/myPage.css">
+<link rel="stylesheet" href="/css/myJjimList.css">
+<script src="/js/index.js"></script>
 
-
-<script th:inline="javascript">
-
-	
+<script>
+	$(function () {
+     $(".container > div").hide();
+    
+    $('.tabnav a').click(function () {
+      $('.container > div').hide().filter(this.hash).fadeIn();
+      $('.tabnav a').removeClass('active');
+      $(this).addClass('active');
+      return false;
+    }).filter(':eq(0)').click();
+  });
 </script>
 
 </head>
 <body>
 
-<div th:replace="fragments/header :: header"></div>
+	<div th:replace="fragments/header :: header"></div>
 
+<<<<<<< HEAD
 	<div id="container" class="center">
 		<h1>[ [[#{alert.preferencem}]] ]</h1>
 		<br>
@@ -91,8 +95,86 @@
 			<div th:if="${#lists.isEmpty(findMyListCos)}" >
 				<h3>찜한 코스가 없습니다.</h3>
 			</div>
+=======
+
+	<div class="nav-container">
+		<h2  th:text="${loginMember +'님의 찜목록'}" style="margin-top:50px;"></h2>
+		<div class="tabnav">
+			<a class="item" href="#findTourist">명소</a> <a class="item"
+				href="#findFestival">축제</a> <a class="item" href="#findCourse">코스</a>
+>>>>>>> 46eb390711448e1bbe87d3a48f6bcb9b79cf88ee
 		</div>
 	</div>
+	<div id="card-container">
+		<div class="container">
+			<div th:else="${findMyListSpots.size()<1}">
+			<h1>찜 한 명소가 없습니다.</h1>
+			</div>
+			<div id="findTourist" class="card" style="--clr: #009688;"
+				th:each="tourist : ${findMyListSpots}" th:if="${findMyListSpots.size()>1}">
+				<div class="imgBx">
+					<img th:src="@{${tourist.main_img_normal}}">
+				</div>
+				<div class="content">
+					<h2 th:text="${tourist.main_title}"></h2>
+					<p th:text="${#strings.abbreviate(tourist.itemcntnts,50)}"></p>
+					<div class="listItem">
+						<i class="far fa-heart testHeart"
+							style="color: #da202c; font-size: 20px" title="like"></i> <span
+							th:text=" ${tourist.place_like}" style="font-size: 20px"></span>
+						<i class="fas fa-eye" style="font-size: 20px" title="hits"></i> <span
+							th:text="${tourist.hit}" style="font-size: 20px"></span>
+					</div>
+					<a th:href="@{/tourist/TouristInfo(tourist_Spot_id=${tourist.tourist_Spot_id})}">상세보기</a>
+				</div>
+			</div>
+			<div id="findFestival" class="card" style="--clr: #009688;"
+				th:each="festival : ${findMyListFes}">
+				<div class="imgBx">
+					<img th:src="@{${festival.main_img_normal}}">
+				</div>
+				<div class="content">
+					<h2 th:text="${festival.main_title}"></h2>
+					<p th:text="${#strings.abbreviate(festival.itemcntnts,50)}"></p>
 
+					<div class="listItem">
+						<i class="far fa-heart testHeart"
+							style="color: #da202c; font-size: 20px" title="like"></i> <span
+							th:text=" ${festival.place_like}" style="font-size: 20px"></span>
+						<i class="fas fa-eye" style="font-size: 20px" title="hits"></i> <span
+							th:text="${festival.hit}" style="font-size: 20px"></span>
+					</div>
+					<a
+						th:href="@{/festival/FestivalInfo(festival_id=${festival.festival_id})}">상세
+						보기</a>
+				</div>
+			</div>
+
+
+			<div id="findCourse" class="card" style="--clr: #009688;"
+				th:each="course : ${findMyListCos}">
+				<div class="imgBx">
+					<img th:src="@{${course.main_img}}">
+				</div>
+				<div class="content">
+					<h2 th:text="${course.course_title}"></h2>
+					 <p th:text="${#strings.abbreviate(course.getCourse_content1(),50)}"></p>
+
+					<div class="listItem">
+						<i class="far fa-heart testHeart"
+							style="color: #da202c; font-size: 20px" title="like"></i> <span
+							th:text=" ${course.place_like}" style="font-size: 20px"></span> <i
+							class="fas fa-eye" style="font-size: 20px" title="hits"></i> <span
+							th:text="${course.hit}" style="font-size: 20px"></span>
+					</div>
+					<!-- <a th:onclick="|location.href='/course/CourseInfo?course_id=${course.course_id}'|">상세
+						보기</a> -->
+						<a th:href="@{/course/CourseInfo?(course_id=${course.course_id})}">상세
+						보기</a>
+				</div>
+			</div>
+
+		</div>
+	</div>
 </body>
 </html>

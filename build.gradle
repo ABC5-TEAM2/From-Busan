@@ -34,8 +34,13 @@ dependencies {
     implementation 'org.webjars.npm:summernote:0.8.18'
     //i18n
     implementation 'net.rakugakibox.util:yaml-resource-bundle:1.1'
+    
+    
+    implementation 'com.modernmt:modernmt-java:1.1.0'
+    
+    
 }
-
+	
 tasks.named('test') {
 	useJUnitPlatform()
 }

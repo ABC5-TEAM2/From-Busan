@@ -1,180 +1,229 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>회원가입</title>
-    <link rel="stylesheet" href="/css/default.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <link rel="stylesheet" href="/css/header.css" />
-    <link rel="stylesheet" href="/css/joinForm.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="/js/index.js"></script>
-    
-    <script>
-    	async function formCheck() {
-    		// 아이디 체크(4~20자리 사이)
-    		let member_id = $("#member_id");
-    		if (member_id.val().length < 4 || member_id.val().length > 20) {
+<meta charset="UTF-8">
+<title>회원가입</title>
+<link rel="stylesheet" href="/css/default.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<link rel="stylesheet" href="/css/header.css" />
+<link rel="stylesheet" href="/css/joinForm.css" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="/js/index.js"></script>
+<script>
+      	let idck = 0;
+       function isEmpty(obj,msg){
+    	   if(obj.val().length==0){
+    		   alert(msg);
+    		   obj.focus();
+    		   return true;
+    	   }
+    	   return false;
+       }
+    	 function formCheck() {
+    		  //let form = $('#idForm');
+    			let member_id = $("#member_id");
+        	let password = $("#password");
+					let passwordCheck=$("#passwordCheck");
+					let name = $('#name'); 
+					let birth = $("#birth");
+					let now = new Date();
+        	let phone_number = $("#phone_number");
+        	let birthDate = new Date(birth.val());
+        	
+       		if(idck==0){
+	            alert('아이디 중복체크를 해주세요');
+	            return false;
+	        }
+       		
+       		if(isEmpty(member_id,"[[#{alert.alertid}]]")) return;
+       		if(isEmpty(password,"[[#{alert.alertPassword}]]")) return;
+       		if(isEmpty(name,"[[#{alert.alertName}]]")) return;
+       		//비밀번호 일치확인
+       		if(password.val() != passwordCheck.val()){
+					alert("[[#{alert.alertPassword2}]]");
+					password.focus();
+       		return;
+       		}
+       		if(isEmpty(birth,"[[#{alert.alertbirth}]]")) return;
+       		//생년월일 체크
+       		if (now < birthDate) {
+        		alert("[[#{alert.alerttoday}]]");
+        		birth.focus();
+        		return;
+        	}
+       		
+       		if(isEmpty(phone_number,"[[#{alert.alertPhone}]]")) return;
+       		if(isEmpty(password,"[[#{alert.alertPassword}]]")) return;
+       		if(isEmpty(password,"[[#{alert.alertPassword}]]")) return;
+       		
+       		//submit
+       		return true;
+        /* else if (member_id.val().length < 4 || member_id.val().length > 20) {
     			alert("[[#{alert.alertid}]]");
     			member_id.focus();
     			return false;
-    		}
-    		
-        	// 패스워드 체크(4~20자리 사이)
-        	let password = $("#password");
-    		if (password.val().length < 4 || password.val().length > 20) {
+    		}else if (password.val().length < 4 || password.val().length > 20) {
     			alert("[[#{alert.alertPassword}]]");
     			password.focus();
     			return false;
-    		}
-			//패스워드 중복체크
-			let passwordCheck=$("#passwordCheck");
-			if(password.val() != passwordCheck.val()){
+    		}else if(password.val() != passwordCheck.val()){
 				alert("[[#{alert.alertPassword2}]]");
 				password.focus();
 				return false;
-			}
-    		
-    		
-        	// 이름 체크(공백이 아님)
-        	let name = $("#name");
-        	if (name.val() == "") {
+						}else if (name.val() == "") {
         		alert("[[#{alert.alertName}]]");
         		name.focus();
         		return false;
-        	}
-        	
-        	// 생년월일 체크(오늘 이전 날짜만 가능)
-        	let birth = $("#birth");
-        	if (birth.val() == "") {
+        	}else if (birth.val() == "") {
         		alert("[[#{alert.alertbirth}]]");
         		birth.focus();
         		return false;
-        	}
-        	let now = new Date();
-        	let birthDate = new Date(birth.val());
-        	if (now < birthDate) {
+        	}else if (now < birthDate) {
         		alert("[[#{alert.alerttoday}]]");
         		birth.focus();
         		return false;
-        	}
-        
-        	let phone_number = $("#phone_number");
-        	if (phone_number.val() == "") {
+        	}else if (phone_number.val() == "") {
         		alert("[[#{alert.alertPhone}]]");
         		birth.focus();
         		return false;
-        	}
-            if (!phone_number.val().includes('-')) { // '-'가 포함되어 있지 않은 경우
+        	}else if (!phone_number.val().includes('-')) { // '-'가 포함되어 있지 않은 경우
                 alert("[[#{alert.alertincludes}]]");
                 phone_number.focus();
                 return false;
-            }
-            if (phone_number.val().charAt(3) !== '-' || phone_number.val().charAt(8) !== '-') {
+            }else if (phone_number.val().charAt(3) !== '-' || phone_number.val().charAt(8) !== '-') {
                 alert("[[#{alert.alertcharAt}]]");
                 phone_number.focus();
                 return false;
-            }
-            if (phone_number.length() !== 13) {
+            }else if (phone_number.length() !== 13) {
                 alert("[[#{alert.alertlength}]]");
                 phone_number.focus();
                 return false;
-            }
-            let idCheckResult = await idCheck();
-            if(idCheckResult===false){
+            }else{
+           		alert(name.val()+"님 회원가입이 완료되었습니다.감사합니다.");
+            	event.preventDefault()	
+            	return true;
+            } */
+            /* if(idCheckResult===false){
                 alert("[[#{alert.alertidCheck}]]");
                 return false;
-            }
-            return idCheckResult;
+            }	 */
     	}
     	
-    	
-    	async function idCheck() {
-    	    let member_id = $("#member_id").val(); // 입력한 아이디 값 가져오기
-    	    try {
-    	        let response = await $.ajax({
-    	            url: "/member/",
-    	            method: "GET"
-    	        });
-    	        console.log(response);
-    	        for (let i = 0; i < response.length; i++) {
-    	            if (member_id === response[i]) {
-    	                alert("[[#{alert.alertidCheck}]]");
-    	                $("#member_id").focus(); // id selector를 사용하여 해당 요소에 포커스 설정
-    	                return false;
-    	            }
-    	        }
-    	        alert("[[#{alert.alertid2}]]")
-    	        return true;
-    	    } catch (error) {
-    	        console.log(error);
-    	    }
-    	}
+    	//아이디 체크여부 확인 (아이디 중복일 경우 = 0 , 중복이 아닐경우 = 1 )
+    	 
+    	 $(function() {
+    	     //idck 버튼을 클릭했을 때 
+    	     $("#idck").click(function() {
+    	         
+    	         //userid 를 param.
+    	         let member_id =  $("#member_id").val(); 
+    	         
+    	         $.ajax({
+    	             async: true,
+    	             type : 'POST',
+    	             data : member_id,
+    	             url : "/member/idCheck",
+    	             dataType : "json",
+    	             contentType: "application/json; charset=UTF-8",
+    	             success : function(data) {
+    	                 if (data.cnt > 0) {
+    	                     alert("아이디가 존재합니다. 다른 아이디를 입력해주세요.");
+    	                     $("#member_id").focus();
+    	                 } else {
+    	                     alert("사용가능한 아이디입니다.");
+    	                     $("#password").focus();
+    	                     //아이디가 중복하지 않으면  idck = 1 
+    	                     idck = 1;
+    	                 }
+    	             },
+    	             error : function(error) {
+    	                 alert("다시입력해주세요");
+    	             }
+    	         });
+    	     });
+    	 });
+    	  
     	
     </script>
 </head>
 <body>
-<div th:replace ="fragments/header :: header">
-	</div>
-<div id="join-container">
-        <form action="/member/join" method="post" th:object="${joinForm}" onsubmit="return formCheck()">
-            <div class="logo-container">
-                <h2> [[#{alert.welcome}]]</h2>
-                <img class="img" src="/image/bugi.png" alt="부기">
-            </div>
-            <table>
-                <tr>
-                    <td class="leftTd">[[#{alert.ID}]]</td>
-                    <td class="rightTd">
-                        <input type="text" th:field="*{member_id}">
-                        <input class="butID" th:field="*{member_id}" type="button" data-value="#{alert.Duplicate}" th:value="#{alert.Duplicate}" onclick="return idCheck()">
-                   <script th:inline="javascript">
-					$(document).ready(function() {
-					  $('input[type="button"]').each(function() {
-					    $(this).val($(this).attr('value'));
-					  });
-					});
-					</script>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="leftTd">[[#{alert.Password}]]</td>
-                    <td class="rightTd">
-                        <input type="password" th:field="*{password}">
-                        <p>[[#{alert.password1}]] <span class="red">[[#{alert.password2}]]</span>[[#{alert.password3}]]</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="leftTd">[[#{alert.Check}]]</td>
-                    <td class="rightTd"><input type="password" id="passwordCheck"></td>
-                </tr>
-               <tr>
-                <td class="leftTd">[[#{alert.name}]]</td>
-                <td class="rightTd"><input type="text" th:field="*{name}"></td>
-               </tr>
-                <tr>
-                    <td class="leftTd">[[#{alert.birth}]]</td>
-                    <td class="rightTd"><input type="date" th:field="*{birth}"></td>
-                </tr>
-                <tr>
-                    <td class="leftTd">[[#{alert.Phone}]]</td>
-                    <td class="rightTd"><input type="tel" th:field="*{phone_number}"></td>
-                </tr>
-            </table>
+	<div th:replace="fragments/header :: header"></div>
+	<div id="join-container">
+		<form id="idForm" action="/member/join" method="post"
+			th:object="${joinForm}" onsubmit="return formCheck()">
+			<div th:if="${#fields.hasGlobalErrors()}">
+      <p class="error" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+    	</div>
+			<div class="logo-container">
+				<h2>[[#{alert.welcome}]]</h2>
+				<img class="img" src="/image/bugi.png" alt="부기">
+			</div>
+			<table>
+				<tr>
+					<td class="leftTd">[[#{alert.ID}]]</td>
+					<td class="rightTd"><input type="text" th:field="*{member_id}">
+						<input class="butID" id="idck" type="button"
+						data-value="#{alert.Duplicate}" th:value="#{alert.Duplicate}">
+						<span class="error" th:errors="*{member_id}"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="leftTd">[[#{alert.Password}]]</td>
+					<td class="rightTd"><input type="password"
+						th:field="*{password}">
+						<p>
+							[[#{alert.password1}]] <span class="red">[[#{alert.password2}]]</span>[[#{alert.password3}]]
+						</p></td>
+				</tr>
+				<tr>
+					<td class="leftTd">[[#{alert.Check}]]</td>
+					<td class="rightTd"><input type="password" id="passwordCheck"></td>
+				</tr>
+				<tr>
+					<td class="leftTd">[[#{alert.name}]]</td>
+					<td class="rightTd"><input type="text" th:field="*{name}">
+					<span class="error" th:errors="*{name}"></span></td>
+				</tr>
+				<tr>
+					<td class="leftTd">[[#{alert.birth}]]</td>
+					<td class="rightTd"><input type="date" th:field="*{birth}">
+					<span class="error" th:errors="*{birth}"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="leftTd">[[#{alert.Phone}]]</td>
+					<td class="rightTd"><input type="tel"
+						th:field="*{phone_number}">
+						</td>
+				</tr>
+			</table>
 
-            <div class="join-button">
-                <input class="btn-join" type="submit" data-value="#{alert.join}" th:value="#{alert.join}" >
-                <input class="btn-cancel" type="reset" data-value="#{alert.cancel}" th:value="#{alert.cancel}">
-            </div>		
-			<script th:inline="javascript">
+			<div class="join-button">
+				<input class="btn-join" type="submit" data-value="#{alert.join}"
+					th:value="#{alert.join}"> <input class="btn-cancel"
+					type="reset" data-value="#{alert.cancel}"
+					th:value="#{alert.cancel}">
+			</div>
+
+		</form>
+	</div>
+	<script th:inline="javascript">
 				$(document).ready(function() {
 					  $('input[type="submit"], input[type="reset"]').each(function() {
 					    $(this).val($(this).attr('value'));
 					  });
 					});
 			</script>
-            
-        </form>
-    </div>
+	<script th:inline="javascript">
+					$(document).ready(function() {
+					  $('input[type="button"]').each(function() {
+					    $(this).val($(this).attr('value'));
+					  });
+					});
+					</script>
 </body>
 </html>

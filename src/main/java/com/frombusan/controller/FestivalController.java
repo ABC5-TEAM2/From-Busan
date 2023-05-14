@@ -53,7 +53,6 @@ public class FestivalController {
 		RowBounds rowBounds = new RowBounds(navi.getStartRecord(), navi.getCountPerPage());
 		List<Festival> findAllFestival = festivalMapper.findAllFestival(searchText, rowBounds);
 		
-		log.info(":{}",findAllFestival.get(0));
 		model.addAttribute("findAllFestival", findAllFestival);
 		model.addAttribute("navi", navi);
 

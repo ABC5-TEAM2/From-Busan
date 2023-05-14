@@ -12,13 +12,10 @@
 
 
 		<!-- 죻아요 순으로 재정렬 -->
-	 <select id="findAllCourse" resultMap="courseResultMap">
-		select * from course order by hit desc
+	 <select id="findAllCourse" resultType="course">
+		select course_id,course_title, main_img, place_like,hit from course order by hit desc
 	</select>
-	<resultMap type="course" id="courseResultMap">
-		<id property="id" column="id" />
-		<result property="hit" column="hit" />
-	</resultMap>
+
     
     
     

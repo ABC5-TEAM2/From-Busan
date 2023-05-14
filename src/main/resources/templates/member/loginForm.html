@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>[[#{alert.Login}]]</title>
-    <script
+<meta charset="UTF-8">
+<title>[[#{alert.Login}]]</title>
+<script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="/js/index.js"></script>
-    <link rel="stylesheet" href="/css/header.css" />
-    <link rel="stylesheet" href="/css/loginForm.css" />
-    
-    
-    
-    <script th:inline="javascript">
+<script src="/js/index.js"></script>
+<link rel="stylesheet" href="/css/header.css" />
+<link rel="stylesheet" href="/css/loginForm.css" />
+
+<script th:if="${not #strings.isEmpty(alertMessage)}"
+	th:inline="javascript">
+        		alert([[${alertMessage}]]);
+    			</script>
+<script th:inline="javascript">
     
 	function findId() {
 	  
@@ -29,36 +31,46 @@
 		    window.open(url, 'Popup', options);
 	
 	}
+	
+	
+	
     </script>
-    
-    
+
+
 </head>
 <body>
-	<div th:replace ="fragments/header :: header">
- 	</div>
-  		
-  <div id="login-container">
-        <img class="img" src="/image/bugi.png" alt="bugi">
-        
-        <form action="/member/login" method="post" th:object="${loginForm}">
-            <h1>[[#{alert.Login}]]</h1>
-            <div th:if="${#fields.hasGlobalErrors()}">
-                <p class="error" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
-            </div>
-			
-            <div class="login-input">
-                <input type="text" th:field="*{member_id}" th:attr="placeholder=#{${'alert.plsID'}}">
-                <input type="password" th:field="*{password}"th:attr="placeholder=#{${'alert.plsPas'}}">
-            </div>
+	<div th:replace="fragments/header :: header"></div>
 
-            <div class="login-submit">
-                <input class="btn-login" type="submit" data-value="#{alert.Login}" th:value="#{alert.Login}" >
-            </div>
-            
-                <input class="btn-login" type="text" data-value="#{alert.Findid}" th:value="#{alert.Findid}" onclick="findId()">
-            
-                <input class="btn-login" type="text" data-value="#{alert.FindPas}" th:value="#{alert.FindPas}"  onclick="findPassword()" >
-                
+	<div id="login-container">
+		<img class="img" src="/image/bugi.png" alt="bugi">
+
+
+
+
+		<form action="/member/login" method="post" th:object="${loginForm}">
+			<h1>[[#{alert.Login}]]</h1>
+			<div th:if="${#fields.hasGlobalErrors()}">
+				<p class="error" th:each="err : ${#fields.globalErrors()}"
+					th:text="${err}"></p>
+			</div>
+
+			<div class="login-input">
+				<input type="text" th:field="*{member_id}"
+					th:attr="placeholder=#{${'alert.plsID'}}"> <input
+					type="password" th:field="*{password}"
+					th:attr="placeholder=#{${'alert.plsPas'}}">
+			</div>
+
+			<div class="login-submit">
+				<input class="btn-login" type="submit" data-value="#{alert.Login}"
+					th:value="#{alert.Login}"> <input class="btn-login"
+					type="button" data-value="#{alert.Findid}"
+					th:value="#{alert.Findid}" onclick="findId()"> <input
+					class="btn-login" type="button" data-value="#{alert.FindPas}"
+					th:value="#{alert.FindPas}" onclick="findPassword()">
+
+			</div>
+
 			<script th:inline="javascript">
 				$(document).ready(function() {
 					  $('input[type="submit"], input[type="text"]').each(function() {
@@ -66,7 +78,7 @@
 					  });
 					});
 			</script>
-        </form>
-    </div>
+		</form>
+	</div>
 </body>
 </html>

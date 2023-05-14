@@ -21,7 +21,15 @@
 		<result property="hit" column="hit" />
 	</resultMap>
     
-    
+     
+    <select id="findAllFestivalForMain" resultMap="festivalForMain">
+        select festival_id,place_like,main_img_normal,main_title 
+        from festival order by hit desc
+    </select>
+   	<resultMap type="festival" id="festivalForMain">
+		<id property="id" column="id" />
+		<result property="hit" column="hit" />
+	</resultMap>
     
     
     

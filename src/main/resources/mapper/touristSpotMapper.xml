@@ -20,6 +20,15 @@
 	</resultMap>
 	
 	
+	<select id="findAllTouristForMain" resultMap="touristForMain">
+		select tourist_spot_id,place_like,main_img_normal,main_title from
+		tourist_spot order by hit desc
+	</select>
+    <resultMap type="tourist" id="touristForMain">
+		<id property="id" column="id" />
+		<result property="hit" column="hit" />
+	</resultMap>
+	
 	
 	
 	<select id="getTotal" resultType="int">

@@ -30,10 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class CourseController {
 	
-	
-	
 	@Autowired
-	private ReviewService reviewService;
 	private CourseMapper courseMapper;
 	
 	 // 게시판 관련 상수 값
@@ -42,20 +39,17 @@ public class CourseController {
     
     @PostMapping("/{course_id}")
     public ResponseEntity<List<Course>> findCourse(Long course_id, Model model) {
-    	
-    	log.info("축제 실행");
 		List<Course> findAllCourse = courseMapper.findAllCourse();
-
-    	log.info(" findAllCourse:{}", findAllCourse);
-    	
     	return ResponseEntity.ok(findAllCourse);
     }
     
     @GetMapping("list")
 	public String list(@RequestParam(value = "page", defaultValue = "1") int page,
-			@RequestParam(value = "searchText", defaultValue = "") String searchText, Model model) {
+			 Model model) {
     	
+    	log.info("안녕"); 	
 		List<Course> findAllCourse = courseMapper.findAllCourse();
+		log.info("추천리스트 :{}",findAllCourse);
 		model.addAttribute("findAllCourse", findAllCourse);
 		
 		return "course/CourseList";
@@ -63,12 +57,11 @@ public class CourseController {
     
  // 게시글 읽기
  	@GetMapping("/CourseInfo")
- 	public String read(@RequestParam("course_id") Long course_id,@SessionAttribute(value = "loginMember", required = false) Member loginMember,
+ 	public String read(@RequestParam Long course_id, @SessionAttribute(value = "loginMember", required = false) Member loginMember,
  			 Model model) {
-
+ 		log.info("course_id:{}",course_id);
  		// board_id 에 해당하는 게시글을 데이터베이스에서 찾는다.
  		Course course= courseMapper.findCourse(course_id);
- 		log.info("course:{}",course);
  		
  		// board_id에 해당하는 게시글이 없으면 리스트로 리다이렉트 시킨다.
  		if (course == null) {
@@ -146,7 +139,6 @@ public class CourseController {
 														,@SessionAttribute(value = "loginMember", required = false) Member loginMember
 														) {
 
- 		log.info("안녕:{}");
 		List<String> findCourseMyList = courseMapper.findMyListMemberId(course_id);
 		List<Map<String, Object>> findMyListById = courseMapper.findMyListById(course_id);
 		Course Course= courseMapper.findCourse(course_id);
@@ -155,7 +147,6 @@ public class CourseController {
 		CourseMyList CourseMyList = new CourseMyList();
 		String member_id = loginMember.getMember_id();
 		
-		log.info("findMyListById:{}",findMyListById);
 		
 		Object wishboard_id = null;
 		for (int i = 0; i < findMyListById.size(); i++) {

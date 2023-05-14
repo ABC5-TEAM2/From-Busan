@@ -147,7 +147,7 @@
      type: "post",
      success: function (data, success, xhr) {
      	  const data1 = data.filter((item)=>{
-     	    return item.NAME==name && item.PHONE_NUMBER ==phone_number ;
+      	    return item.NAME==name && item.PHONE_NUMBER ==phone_number;
      	  });
      	  if(data1.length !== 0){
      	    const member_id = data1[0].MEMBER_ID;
@@ -208,7 +208,7 @@
             </div>
 
             <div class="login-submit">
-			<input class="btn-login" type="button" value="ID" onclick="findId()" >
+							<input class="btn-login" type="button" value="ID찾기" onclick="findId()" >
             </div>
             
             <div id="countdown"></div>

@@ -4,18 +4,26 @@
 <head>
 <meta charset="UTF-8">
 <title>게시판 리스트</title>
+<link rel="stylesheet" href=/css/default.css>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+	rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+	crossorigin="anonymous"> -->
+
+<script async
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_FL3IrY7I_w7Cerf1pK28nSvyxby86Xg&callback=getRestaurant&v=weekly">
+    </script>
+
 <link rel="stylesheet" href="/css/header.css" />
 <link rel="stylesheet" href="/css/Info.css" />
 <script src="/js/index.js"></script>
-	<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZDS2Huu1p2-ZjV4J6TzNyJikS9OCVqkw&callback=getRestaurant&v=weekly"></script>
-
 
 <style type="text/css">
 </style>
 <script th:inline="javascript">
-
+	
 
 ///////////////////////////////////////기본 장소 지도 //////////////////////////////////////
 function getDb(){
@@ -485,7 +493,7 @@ function myList(touristSpotId) {
 	$.ajax({
 	url: "myList",
 	type: "POST",
-	data: { festival_id: festival_id },
+	data: { touristSpotId: touristSpotId },
 	success: function (result) {
 		        if (result.jjim===true) {
 		          alert("찜 목록에 추가되었습니다.");
@@ -571,30 +579,111 @@ function myList(touristSpotId) {
       })
     }) */
     
-  //팝업창 띄우기 
+  //팝업창 띄우기 (예제)
     function findTourist(homepage_url) {
         window.open(homepage_url, 'Popup');
-    }          
+    }     
+   
+    
+/////////////// 번역 /////////////////////////////////////////////////////////////////////////
+  
+  function translate(lang) {
+		// 번역할 코드
+		
+		//querySelector() 메소드를 사용하여 id가 "itemcntnts"인 div의 자식 중 첫번째 p 태그의 텍스트 내용을 가져옵니다. textContent 속성은 해당 엘리먼트의 텍스트 내용을 반환합니다.
+		//let itemcntnts = document.querySelector("#itemcntnts > p").textContent;
+		let itemcntnts = document.querySelector(".explain > p").getAttribute("data-original");
+		
+		let hldyInfo= document.getElementById("hldy_info").getAttribute("data-original");
+		let usage_day_week_and_time= document.getElementById("usage_day_week_and_time").getAttribute("data-original");
+		let usageAmount= document.getElementById("usage_amount").getAttribute("data-original");
+		let trfcInfo= document.getElementById("trfc_info").getAttribute("data-original");
+		//주소는 저작권 관련된걸로 보임. 번역불가
+		//let add1= document.getElementById("add1").getAttribute("data-original");
+		// ajax 호출 등의 코드 추가
+		$.ajax({
+			url : "/translate/tourInfo",
+			type : "post",
+			data : {
+				itemcntnts : itemcntnts,
+				//add1:add1,
+				hldyInfo:hldyInfo,
+				usage_day_week_and_time:usage_day_week_and_time,
+				usageAmount:usageAmount,
+				lang : lang,
+				trfcInfo : trfcInfo,
+			},
+			success : function(joined) {
+				
+				let index=0;
+				$(".explain > p").text(joined[index].translation);
+				index++;
+				
+				//$("#add1").text(joined[index].translation).attr("th:data-original", joined[index].translation);
+				//index++;
+				
+				$("#hldy_info").text(joined[index].translation).attr("th:data-original", joined[index].translation);
+				index++;
+				$("#usage_day_week_and_time").text(joined[index].translation).attr("th:data-original", joined[index].translation);
+				index++;
+				$("#usage_amount").text(joined[index].translation).attr("th:data-original", joined[index].translation);
+				index++;
+				$("#trfc_info").text(joined[index].translation).attr("th:data-original", joined[index].translation);
+				index++;
+
+				
+				
+			},
+			error : function(xhr, status, error) {
+				console.error('AJAX error:', error);
+			}
+		});
+	}
+	
+    $(document).ready(function() {
+		$("#translate-en").click(function() {
+			translate('en');
+		});
+		$("#translate-ja").click(function() {
+			translate('ja');
+		});
+		$("#translatezh-CN").click(function() {
+			translate('zh-CN');
+		});
+	});
+    
+    
   </script>
 </head>
 
 
 <body>
-
+	
+	
+	
 	<div th:replace="fragments/header :: header"></div>
 	<div id="container" th:object="${tourist_Spot}">
+	
+		
+	
+	
 		<nav class="tabnav">
+		
 			<a class="item" href="#itemcntnts">상세 정보</a> <a class="item"
 				href="#information">이용 정보</a> <a class="item" href="#mapContainer"
 				onclick="getRestaurant()">주변 맛집 지도</a>
 		</nav>
 
+		<button id="translate-en">영어 번역하기</button>
+		<button id="translate-ja">일본어 번역하기</button>
+		<button id="translatezh-CN">중국어 번역하기</button>
+		
 		<div id="spot-header-container">
 			<div class="itemcntnts" id="itemcntnts">
 
 				<img th:src="*{main_img_normal}" th:alt="*{main_title}">
 
-				<div class="heartWish">
+				<div class="heartWish" th:if="${member_id}">
 					<div class="left_area">
 						<a th:unless="${#lists.contains(findTouristSpotLikes, member_id)}"
 							href="javascript:;" class="icon heart"
@@ -628,25 +717,26 @@ function myList(touristSpotId) {
 						</a>
 					</div>
 				</div>
+			<br>
 
 				<input type="button" class="btn btn-success"
 					th:onclick="location.href='/review/reviewList?main_title=[[${tourist_Spot.main_title}]]'"
 					value="관련 리뷰 찾기">
 
 
-				<div class="explain">
-					<h3 th:text="*{itemcntnts}"></h3>
+				<div class="explain" >
+					<p th:text="*{itemcntnts}"  th:data-original="*{itemcntnts}"></p>
 				</div>
 			</div>
 
 			<div class="information" id="information">
 				<table class="information-table" border="1px solid black">
 					<tr>
-						<td>주소</td>
-						<td th:text="*{addr1}"></td>
+						<th>주소</th>
+						<td th:text="*{addr1}" id="add1" th:data-original="*{addr1}"></td>
 					</tr>
 					<tr>
-						<td>전화번호</td>
+						<th>전화번호</th>
 						<td th:text="*{cntct_tel}"></td>
 					</tr>
 					<tr>
@@ -656,38 +746,44 @@ function myList(touristSpotId) {
 							th:text="${tourist_Spot.homepage_url}"></a></td>
 					</tr>
 					<tr>
-						<td>휴무일</td>
-						<td th:text="*{hldy_info}"></td>
+						<th>휴무일</th>
+						<td th:text="*{hldy_info}" id="hldy_info" th:data-original="*{hldy_info}"></td>
 					</tr>
 					<tr>
-						<td>운영요일 및 시간</td>
-						<td th:text="*{usage_day_week_and_time}"></td>
+						<th>운영요일 및 시간</th>
+						<td th:text="*{usage_day_week_and_time}" 
+						id="usage_day_week_and_time" th:data-original="*{usage_day_week_and_time}"></td>
 					</tr>
 					<tr>
-						<td>요금</td>
-						<td th:text="*{usage_amount}"></td>
+						<th>요금</th>
+						<td th:text="*{usage_amount}"
+						id="usage_amount" th:data-original="*{usage_amount}"></td>
 					</tr>
 					<tr>
-						<td>교통정보</td>
-						<td th:text="*{trfc_info}"></td>
+						<th>교통정보</th>
+						<td th:text="*{trfc_info}"
+						id="trfc_info" th:data-original="*{trfc_info}"></td>
 					</tr>
 				</table>
 
 			</div>
 
 			<div id="mapContainer">
+
+				<div class="find">
+					<input class="findRT" type="button" onclick="getRestaurant()" value="맛집 찾기"> 
+						<input class="findRT" type="button" onclick="getDb()" value="명소 찾기">
+				</div>
+				
 				<div id="map"></div>
 				<div class="modal">
 					<span class="close">&times;</span>
 					<div id="modalText"></div>
 				</div>
-				<div>
-					<input type="button" onclick="getRestaurant()" value="맛집 찾기"> 
-					<input type="button" onclick="getDb()" value="명소 찾기">
-				</div>
+
 			</div>
 
-		
+
 
 
 		</div>

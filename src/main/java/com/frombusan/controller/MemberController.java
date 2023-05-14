@@ -1,6 +1,7 @@
 package com.frombusan.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -66,7 +69,7 @@ public class MemberController {
     // 회원가입
     @PostMapping("join")
     public String join(@Validated @ModelAttribute("joinForm") MemberJoinForm joinForm,
-                       BindingResult result,Model model) {
+                       BindingResult result,Model model, RedirectAttributes redirectAttributes) {
         log.info("joinForm: {}", joinForm);
 
         // validation 에 에러가 있으면 가입시키지 않고 member/joinForm.html 페이지로 돌아간다.
@@ -79,7 +82,7 @@ public class MemberController {
         // 사용자 정보가 존재하면
         if (member != null) {
         	model.addAttribute("member", member);
-            log.info("이미 가입된 아이디 입니다.");
+            //log.info("이미 가입된 아이디 입니다.");
             // BindingResult 객체에 GlobalError 를 추가한다.
             result.reject("duplicate ID", "이미 가입된 아이디 입니다.");
             // member/joinForm.html 페이지를 리턴한다.
@@ -87,8 +90,9 @@ public class MemberController {
         }
         // MemberJoinForm 객체를 Member 타입으로 변환하여 데이터베이스에 저장한다.
         memberMapper.saveMember(MemberJoinForm.toMember(joinForm));
-        // 메인 페이지로 리다이렉트한다.
-        return "redirect:/";
+        redirectAttributes.addFlashAttribute("alertMessage", "회원가입이 완료되었습니다.");
+        // 로그인 페이지로 리다이렉트한다.
+        return "redirect:/member/login";
     }
 
     // 로그인 페이지 이동
@@ -160,13 +164,14 @@ public class MemberController {
     	//명소 찜 목록 **서비스 처리 필요
     	List<Map<String, Object>> resultList = touristMapper.findMyListByMemberId(loginMember.getMember_id());
     	List<Tourist_Spot> findMyListSpots = new ArrayList<>();
+    	
     	for (int i = 0; i < resultList.size(); i++) {
-    		 Map<String, Object> resultMap = resultList.get(i);
-		    Object idObj = resultMap.get("TOURIST_SPOT_ID");
+		    Object idObj = resultList.get(i).get("TOURIST_SPOT_ID");
 		    Long touristSpotid = ((Number) idObj).longValue(); // id가 Number 타입일 수도 있으므로 longValue()로 Long 타입으로 변환
 		    Tourist_Spot touristSpot= touristMapper.findTouristSpot(touristSpotid);
 		    findMyListSpots.add(touristSpot);
     	}
+    	//log.info("count : {}",findMyListSpots.size());
     	model.addAttribute("findMyListSpots", findMyListSpots);
     	
     	
@@ -175,12 +180,12 @@ public class MemberController {
     	List<Festival> findMyListFes = new ArrayList<>();
     	
     	for (int i = 0; i < resultList2.size(); i++) {
-    		 Map<String, Object> resultMap2 = resultList2.get(i);
-		    Object idObj2 = resultMap2.get("FESTIVAL_ID");
+		    Object idObj2 = resultList2.get(i).get("FESTIVAL_ID");
 		    Long festival_id = ((Number) idObj2).longValue(); // id가 Number 타입일 수도 있으므로 longValue()로 Long 타입으로 변환
 		    Festival festival= festivalMapper.findFestival(festival_id);
 		    findMyListFes.add(festival);
     	}
+    	//log.info("count : {}",findMyListFes.size());
     	model.addAttribute("findMyListFes", findMyListFes);
     	
     	
@@ -189,25 +194,32 @@ public class MemberController {
     	List<Course> findMyListCos = new ArrayList<>();
 
     	for (int i = 0; i < resultList3.size(); i++) {
-    		 Map<String, Object> resultMap3 = resultList3.get(i);
-		    Object idObj3 = resultMap3.get("COURSE_ID");
+		    Object idObj3 = resultList3.get(i).get("COURSE_ID");
 		    Long courseId = ((Number) idObj3).longValue(); // id가 Number 타입일 수도 있으므로 longValue()로 Long 타입으로 변환
 		    Course course= courseMapper.findCourse(courseId);
 		    findMyListCos.add(course);
     	}
+    	//log.info("count : {}",findMyListCos.size());
     	model.addAttribute("findMyListCos", findMyListCos);
-    	
+    	model.addAttribute("loginMember",loginMember.getMember_id());
     	
         return "member/myJjimList"  ;
     }
-    //id중복확인
-    @GetMapping("")
-    public ResponseEntity<List<String>> checkId(@Validated @ModelAttribute("loginForm") LoginForm loginForm
-    		,@SessionAttribute(value = "loginMember", required = false) Member loginMember)
-            {
-    	List<String> findAllMemberId = memberMapper.findAllMemberId();
-        log.info("findAllMemberId:{}",findAllMemberId);
-		return ResponseEntity.ok(findAllMemberId);
+   
+    
+    
+    
+    @ResponseBody
+    @PostMapping("idCheck")
+    public Map<Object, Object> idcheck(@RequestBody String member_id) {
+        int count = 0;
+        
+        Map<Object, Object> map = new HashMap<Object, Object>();
+        System.out.println(map);
+        count = memberMapper.idCheck(member_id);
+        map.put("cnt", count);
+ 
+        return map;
     }
     
     //id찾기
