@@ -161,8 +161,8 @@ public class ReviewController {
         model.addAttribute("review", review);
 
         // 첨부파일을 찾는다.
-        List<AttachedImg> files = reviewService.findFilesByReviewId(review_id);
-        model.addAttribute("files", files);
+//        List<AttachedImg> files = reviewService.findFilesByReviewId(review_id);
+//        model.addAttribute("files", files);
         
         List<String> findReviewLikes = reviewService.findLikesMemberId(review_id);
 		log.info("findReviewLikes:{}",findReviewLikes);
