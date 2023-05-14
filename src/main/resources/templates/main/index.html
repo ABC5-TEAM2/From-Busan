@@ -98,21 +98,35 @@ google.maps.event.addDomListener(window, 'load', initialize);
 		<div id=panel-container>
 			<!-- 길찾기 -->
 			<div id="panel">
-				<h1>길찾기</h1>
+				<h1>[[#{alert.Findingway}]]</h1>
 				<div class="panel-input">
-					<label for="start"> 출발지:  </label><input type="text" id="start" placeholder="Enter location" />
+					<label for="start"> [[#{alert.starting}]]:  </label><input type="text" id="start" th:attr="placeholder=#{${'alert.Enterlo'}}" />
 				</div>
 				<div class="panel-input">
-					<label for="end"> 도착지:  </label><input type="text" id="end" placeholder="Enter location"	 />
+					<label for="end"> [[#{alert.Destination}]]:  </label><input type="text" id="end" th:attr="placeholder=#{${'alert.Enterlo'}}"	 />
 				</div>
+							<script th:inline="javascript">
+				$(document).ready(function() {
+					  $('input[type="text"]').each(function() {
+					    $(this).val($(this).attr('value'));
+					  });
+					});
+			</script>
 				<div class="panel-input">
-					<strong>Mode of Travel: </strong> 
+					<strong>[[#{alert.ModeTravel}]]: </strong> 
 					<select id="mode">
-						<option value="TRANSIT">Transit</option>
+						<option value="TRANSIT">[[#{alert.Transit}]]</option>
 					</select> 
 					
-					<input type="button" value="길찾기" onclick="calcRoute()" />
+					<input type="button" data-value="#{alert.Findingway}" th:value="#{alert.Findingway}" onclick="calcRoute()" /> 
 					<div id="popup"></div>
+					<script th:inline="javascript">
+				$(document).ready(function() {
+					  $('input[type="button"]').each(function() {
+					    $(this).val($(this).attr('value'));
+					  });
+					});
+				</script>
 				</div>
 			</div>
 			<div id="map"></div>
@@ -122,9 +136,9 @@ google.maps.event.addDomListener(window, 'load', initialize);
 		<div id="tourist-spot-container">
 
 			<div id="tourist-spot-title">
-				<span style="color: #111;">인기 명소</span>
+				<span style="color: #111;">[[#{alert.populara}]]</span>
 				<div class="tourist-spot-title-right">
-					<a href="/tourist/list" style="color: #da202c;">자세히&#8594;</a>
+					<a href="/tourist/list" style="color: #da202c;">[[#{alert.detail}]]&#8594;</a>
 					<div>
 						<i class="fa-sharp fa-solid fa-play fa-rotate-180 fa-xs imagel"
 							style="color: #2f4365;"> </i> <i
@@ -160,9 +174,9 @@ google.maps.event.addDomListener(window, 'load', initialize);
 		<div id="tourist-spot-container">
 
 			<div id="tourist-spot-title">
-				<span style="color: #111;">인기 축제</span>
+				<span style="color: #111;">[[#{alert.popularf}]]</span>
 				<div class="tourist-spot-title-right">
-					<a href="/festival/list" style="color: #da202c;">자세히&#8594;</a>
+					<a href="/festival/list" style="color: #da202c;">[[#{alert.detail}]]&#8594;</a>
 					<div>
 						<i class="fa-sharp fa-solid fa-play fa-rotate-180 fa-xs imageL"
 							style="color: #2f4365;"> </i> <i

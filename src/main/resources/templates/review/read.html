@@ -375,20 +375,43 @@
 				th:if="${session.loginMember.member_id == review.member_id}">
 				<input type="button"
 					th:onclick="|location.href='/review/update?review_id=${review.review_id}'|"
-					value="수정하기">
+					data-value="#{alert.modify}" th:value="#{alert.modify}">
 				<input type="button"
 					th:onclick="|location.href='/review/delete?review_id=${review.review_id}'|"
-					value="삭제하기">
+					data-value="#{alert.delete}" th:value="#{alert.delete}">
 			</th:block>
+			<script th:inline="javascript">
+				$(document).ready(function() {
+					  $('input[type="button"]').each(function() {
+					    $(this).val($(this).attr('value'));
+					  });
+					});
+			</script>
 		</div>
 
 		<div class="reply-container">
 			<div id="replies" class="reply-div"></div>
 
+<<<<<<< HEAD
+
+
+		<div>
+			<label for="reply">[[#{alert.Ripplew}]]: </label> <input type="text" id="reply"
+				name="reply"> <input type="button" data-value="#{alert.Registration}" th:value="#{alert.Registration}"
+				onclick="writeReply()">
+=======
 			<input class="reply-input" id="reply" name="reply" type="text"
 				placeholder=" 댓글을 작성해주세요." value="">
 			<button type="button" class="reply-btn" onclick="writeReply()">작성</button>
+>>>>>>> 46eb390711448e1bbe87d3a48f6bcb9b79cf88ee
 		</div>
+			<script th:inline="javascript">
+				$(document).ready(function() {
+					  $('input[type="button"]').each(function() {
+					    $(this).val($(this).attr('value'));
+					  });
+					});
+			</script>
 
 
 		

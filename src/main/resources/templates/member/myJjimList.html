@@ -30,12 +30,79 @@
 
 	<div th:replace="fragments/header :: header"></div>
 
+<<<<<<< HEAD
+	<div id="container" class="center">
+		<h1>[ [[#{alert.preferencem}]] ]</h1>
+		<br>
+		<h1>[ [[#{alert.preferencea}]] ]</h1>
+		<div class="row">
+			<div class="col-md-4 mb-4" th:if="${findMyListSpots}"
+				th:each="tourist, touristStat: ${findMyListSpots}">
+				<a href="#" class="tourlist-spot-images-container"
+					th:data-tourist="${tourist}"> <img
+					th:src="@{${tourist.main_img_normal}}" alt="임시이미지4"
+					class="tourlist-spot-images"
+					th:onclick="|location.href='/tourist_Spot/TouristInfo?tourist_Spot_id=${tourist.tourist_Spot_id}'|">
+					<div class="tourlist-spot-images-place">
+						<h3 class="tourlist-spot-images-place"
+							th:text="${tourist.main_title}"></h3>
+					</div>
+				</a>
+			</div>
+			<div th:if="${#lists.isEmpty(findMyListSpots)}" >
+				<h3>찜한 명소가 없습니다.</h3>
+			</div>
+			
+			
+		</div>
+		
+		<h1>[ [[#{alert.preferencef}]] ]</h1>
+		<div class="row">
+			<div class="col-md-4 mb-4" th:if="${findMyListFes}"
+				th:each="festival, festivalStat: ${findMyListFes}">
+				<a href="#" class="tourlist-spot-images-container"
+					th:data-festival="${festival}"> <img
+					th:src="@{${festival.main_img_normal}}" alt="임시이미지4"
+					class="tourlist-spot-images"
+					th:onclick="|location.href='/festival/FestivalInfo?festival_id=${festival.festival_id}'|">
+					<div class="tourlist-spot-images-place">
+						<h3 class="tourlist-spot-images-place"
+							th:text="${festival.main_title}"></h3>
+					</div>
+				</a>
+			</div>
+			<div th:if="${#lists.isEmpty(findMyListFes)}" >
+				<h3>찜한 축제가 없습니다.</h3>
+			</div>
+			
+			
+		</div>
+		<h1>[ [[#{alert.preferencec}]] ]</h1>
+		<div class="row">
+			<div class="col-md-4 mb-4" th:if="${findMyListCos}"
+				th:each="course, courseStat: ${findMyListCos}">
+				<a href="#" class="tourlist-spot-images-container"
+					th:data-course="${course}"> <img
+					th:src="@{${course.main_img}}" alt="임시이미지4"
+					class="tourlist-spot-images"
+					th:onclick="|location.href='/course/CourseInfo?course_id=${course.course_id}'|">
+					<div class="tourlist-spot-images-place">
+						<h3 class="tourlist-spot-images-place"
+							th:text="${course.course_title}"></h3>
+					</div>
+				</a>
+			</div>
+			<div th:if="${#lists.isEmpty(findMyListCos)}" >
+				<h3>찜한 코스가 없습니다.</h3>
+			</div>
+=======
 
 	<div class="nav-container">
 		<h2  th:text="${loginMember +'님의 찜목록'}" style="margin-top:50px;"></h2>
 		<div class="tabnav">
 			<a class="item" href="#findTourist">명소</a> <a class="item"
 				href="#findFestival">축제</a> <a class="item" href="#findCourse">코스</a>
+>>>>>>> 46eb390711448e1bbe87d3a48f6bcb9b79cf88ee
 		</div>
 	</div>
 	<div id="card-container">
