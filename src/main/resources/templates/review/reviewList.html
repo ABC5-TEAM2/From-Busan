@@ -155,7 +155,7 @@ function timeForToday() {
 				<div class="center">
 					<input type="button" onclick="location.href='/review/list'"
 						value="목록으로" class="input-btn"> 
-					<input type="button" class="input-btn"
+					<input th:unless="${#list.contains(reviews,member_id)}" href="javascript:;" type="button" class="input-btn"
 						onclick="location.href='/review/write'" value="글쓰기"> 
 					<input class="input-btn"
 						type="button" onclick="location.href='/'" value="메인으로">

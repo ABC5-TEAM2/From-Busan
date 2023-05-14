@@ -35,7 +35,7 @@ public class WebConfig implements WebMvcConfigurer {
     		"/member/login", "/member/logout", "/css/**","/member/","/member/idCheck",
     		"/*.ico", "/error","/image/**","/member/findId","/member/findPassword",
         "/member/**","/festival/**","/tourist/**","/restaurant/**","/review/reviewList","/review/list"
-    		,"/review/read","/translate/list","/translate/tourInfo","/translate/fesInfo"};
+    		,"/review/read","/translate/list","/translate/tourInfo","/translate/fesInfo", "/course/**"};
 
 
 //  @Bean

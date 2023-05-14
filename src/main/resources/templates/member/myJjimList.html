@@ -44,7 +44,7 @@
 			<h1>찜 한 명소가 없습니다.</h1>
 			</div>
 			<div id="findTourist" class="card" style="--clr: #009688;"
-				th:each="tourist : ${findMyListSpots}" th:if="${findMyListSpots.size()>1}">
+				th:each="tourist : ${findMyListSpots}" th:if="${findMyListSpots.size()>0}">
 				<div class="imgBx">
 					<img th:src="@{${tourist.main_img_normal}}">
 				</div>
