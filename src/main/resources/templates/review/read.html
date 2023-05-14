@@ -115,12 +115,12 @@
                     + created_time.getDate() + ". "
                     + created_time.getHours() + ":"
                     + created_time.getMinutes();
-
+	
             str += "<tr>";
             str += "  <td>" + (idx + 1) + "</td>";
             str += "  <td>" + obj.member_id + "</td>";
             if (obj.writer == true) {
-              str += "  <td><input class='reply-input-btn' type='text' id='reply_" + obj.reply_id + "' value='" + obj.content + "'>";
+              str += "  <td><input class='reply-input-btn' type='text' data-original='" + obj.content + "' id='reply_" + obj.reply_id + "' value='" + obj.content + "'>";
               //str += "<button type='button' class='reply-btn'  >작성</button>";
               str += " <button type='button' class='reply-btn'  onclick=updateReply(" + obj.reply_id + ")>수정</button>";
               str += "<button type='button' class='reply-btn'  onclick=removeReply(" + obj.reply_id + ")>삭제</button>";
@@ -217,7 +217,7 @@
     		 		            'src': 'https://cdn-icons-png.flaticon.com/512/803/803087.png',
     		 		            alt: '좋아요삭제'
     		 		          });	
-    	 		        } else {
+    	 		        } else {	
     	 		          alert("좋아요가 삭제되었습니다.");
     	 		         		$(".like_img").attr({
     		 		            'src': '/image/heart-regular.svg',
@@ -255,12 +255,73 @@
           }
         })
       });
+    
+    
+    /////////////////////////////////////번역////////////////////////
+    
+	function translate(lang) {
+		//리류장소들 한꺼번에
+		let reply = [];
+		$("[class='reply-input-btn']").each(function() {
+			reply.push($(this).attr("data-original"));
+		});
+		
+
+		// ajax 호출 등의 코드 추가
+		$.ajax({
+			url : "/translate/replyList",
+			type : "post",
+			data : {
+				reply : reply,
+				lang : lang,
+			},
+			success : function(joined) {
+
+				index=0;
+				console.log(joined);
+				
+				var replyElements = $(".reply-input-btn");
+				replyElements.each(function() {
+				  var replyElement = $(this);
+				  replyElement.val(joined[index].translation);
+				  replyElement.attr("data-translation", joined[index].translation);
+				  index++;
+				});
+
+				
+				
+			},
+			error : function(xhr, status, error) {
+				console.error('AJAX error:', error);
+			}
+		});
+	}
+	$(document).ready(function() {
+		$("#translate-en").click(function() {
+			translate('en');
+		});
+		$("#translate-ja").click(function() {
+			translate('ja');
+		});
+		$("#translatezh-CN").click(function() {
+			translate('zh-CN');
+		});
+	});
+	
+	
+	
+    
     </script>
 </head>
 <body>
 	<div th:replace="fragments/header :: header"></div>
 
 	<div class="read-container">
+
+	<button id="translate-en">영어 번역하기</button>
+	<button id="translate-ja">일본어 번역하기</button>
+	<button id="translatezh-CN">중국어 번역하기</button>
+
 
 		<div th:object="${review}" class="read-form">
 			<span style="font-size: 20px;"><</span><span
@@ -353,9 +414,10 @@
 			</script>
 
 
-
+		
 
 	</div>
+	
 
 
 </body>

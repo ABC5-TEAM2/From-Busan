@@ -104,4 +104,18 @@ public class TranslatorController {
 		joined.addAll(itemcntnt);
         return ResponseEntity.ok(joined);
     }
+	
+	@PostMapping("replyList")
+    public ResponseEntity<List<Translation>> replyList(
+           @RequestParam(value="reply[]") List<String> reply
+    		,@RequestParam String lang) throws IOException {
+		
+		List<Translation> replys = mmt.translate("ko",lang,reply);
+		List<Translation> joined = new ArrayList<>();
+		joined.addAll(replys);
+        return ResponseEntity.ok(joined);
+    }
+	
+	
+	
 }
